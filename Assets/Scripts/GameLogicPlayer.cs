@@ -8,8 +8,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Cinemachine;
-using Firebase.Database;
-using Firebase.Extensions;
 using System.Text;
 
 //BOT oppteammembers with remote players has bot in it for scoring
@@ -235,8 +233,6 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
     bool roundStart = false;
     bool firstRound = true;
 
-    DatabaseReference reference; // it will be needed to connect yo our fb database
-
     private void Start()
     {
         sb = new StringBuilder();
@@ -244,8 +240,6 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
         gameLogic = GetComponent<GameLogicServer>();
         MapScript.Instance.currentMap = PlayerPrefs.GetInt(MAPINDEXPREF);
         SceneManager.LoadSceneAsync(string.Format("Map{0}", MapScript.Instance.currentMap + 1), LoadSceneMode.Additive);//.completed += (_) => { for (int i = 0; i < SceneManager.sceneCount; i++) Debug.Log(SceneManager.GetSceneAt(i).name); };
-
-        reference = FirebaseDatabase.DefaultInstance.RootReference; // setting reference for our fb database
     }
 
     // Update is called once per frame
@@ -2080,17 +2074,17 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
             SpecialData.Instance.user.userId = "VirtualIllusions";
         }
         string json = JsonUtility.ToJson(SpecialData.Instance.user);
-        reference.Child("Users").Child(SpecialData.Instance.user.userId.ToString()).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCompleted)
-            {
-                //Debug.Log("successfully added data to firebase");
-            }
-            else
-            {
-                //Debug.Log("not successfull");
-            }
-        });
+        //reference.Child("Users").Child(SpecialData.Instance.user.userId.ToString()).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        //{
+        //    if (task.IsCompleted)
+        //    {
+        //        //Debug.Log("successfully added data to firebase");
+        //    }
+        //    else
+        //    {
+        //        //Debug.Log("not successfull");
+        //    }
+        //});
     }
     #endregion
 }

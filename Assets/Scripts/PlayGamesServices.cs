@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GooglePlayGames;
-using GooglePlayGames.BasicApi;
 using UnityEngine.UI;
 using System;
 using Random = UnityEngine.Random;
@@ -109,17 +107,17 @@ public class PlayGamesServices : MonoBehaviour
     {
         currentID = Social.localUser.id;
         //PlayerPrefs.SetInt("IsLogged", 0);
-        PlayGamesPlatform.Instance.SignOut();
+        //PlayGamesPlatform.Instance.SignOut();
     }
 
     public void Initialize()
     {
-        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-            .RequestServerAuthCode(false).
-            Build();
-        PlayGamesPlatform.InitializeInstance(config);
-        PlayGamesPlatform.DebugLogEnabled = true;
-        PlayGamesPlatform.Activate();
+        //PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+        //    .RequestServerAuthCode(false).
+        //    Build();
+        //PlayGamesPlatform.InitializeInstance(config);
+        //PlayGamesPlatform.DebugLogEnabled = true;
+        //PlayGamesPlatform.Activate();
         debugtext.text += "\nplaygames initialized";
         Debug.Log("playgames initialized");
         SignInWithPlayGames();
@@ -127,40 +125,40 @@ public class PlayGamesServices : MonoBehaviour
 
     void SignInWithPlayGames()
     {
-        PlayGamesPlatform.Instance.Authenticate(SignInInteractivity.CanPromptAlways, (success) =>
-        {
-            switch (success)
-            {
-                case SignInStatus.Success:
-                    if (currentID != "" && currentID != Social.localUser.id )
-                    {
-                        // signed in to different acc
-                        LocalDatas.Instance.currentBallSkinIndex = 0;
-                        LocalDatas.Instance.currentCharacterIndex = 0;
-                        LocalDatas.Instance.currentMapIndex = 0;
+        //PlayGamesPlatform.Instance.Authenticate(SignInInteractivity.CanPromptAlways, (success) =>
+        //{
+        //    switch (success)
+        //    {
+        //        case SignInStatus.Success:
+        //            if (currentID != "" && currentID != Social.localUser.id )
+        //            {
+        //                // signed in to different acc
+        //                LocalDatas.Instance.currentBallSkinIndex = 0;
+        //                LocalDatas.Instance.currentCharacterIndex = 0;
+        //                LocalDatas.Instance.currentMapIndex = 0;
 
-                        PlayerPrefs.SetInt(characterIndex, 0);
-                        PlayerPrefs.SetInt(profilePicIndex, 0);
-                        PlayerPrefs.SetInt(vfxIndex, 0);
-                        PlayerPrefs.SetInt(mapIndex, 0);
-                    }
+        //                PlayerPrefs.SetInt(characterIndex, 0);
+        //                PlayerPrefs.SetInt(profilePicIndex, 0);
+        //                PlayerPrefs.SetInt(vfxIndex, 0);
+        //                PlayerPrefs.SetInt(mapIndex, 0);
+        //            }
 
-                    playGamesButton.GetComponent<Image>().sprite = OnButtonSprite;
+        //            playGamesButton.GetComponent<Image>().sprite = OnButtonSprite;
 
-                    LocalDatas.Instance.userID = Social.localUser.id;
+        //            LocalDatas.Instance.userID = Social.localUser.id;
 
-                    if (MenuCommonObjects.Instance.loadingSlider != null) MenuUIController.Instance.SetSliderWithTweening(0f, 0.3f);
-
-
-                    FirebaseController.Instance.ReadData(Social.localUser.id);
+        //            if (MenuCommonObjects.Instance.loadingSlider != null) MenuUIController.Instance.SetSliderWithTweening(0f, 0.3f);
 
 
-                    break;
-                default:
-                    // Not succesfull
-                    break;
-            }
-        });
+        //            FirebaseController.Instance.ReadData(Social.localUser.id);
+
+
+        //            break;
+        //        default:
+        //            // Not succesfull
+        //            break;
+        //    }
+        //});
     }
 
     //public void RefreshTest()

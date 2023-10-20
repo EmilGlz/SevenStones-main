@@ -45,12 +45,12 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    //private void Start()
-    //{
-    //    Debug.Log("Connecting to Photon Network Master.");
-    //    PhotonNetwork.GameVersion = "0.0.1";
-    //    PhotonNetwork.ConnectUsingSettings();
-    //}
+    private void Start()
+    {
+        Debug.Log("Connecting to Photon Network Master.");
+        PhotonNetwork.GameVersion = "0.0.1";
+        PhotonNetwork.ConnectUsingSettings();
+    }
     //TODO After connecting to database
     public override void OnConnectedToMaster()
     {

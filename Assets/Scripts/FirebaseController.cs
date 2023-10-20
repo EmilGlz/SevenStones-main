@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Firebase.Database;
-using Firebase.Extensions;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
@@ -13,7 +11,6 @@ using UnityEngine.Networking;
 
 public class FirebaseController : MonoBehaviour
 {
-    DatabaseReference reference;
     [SerializeField] TMP_InputField username;
     [SerializeField] TMP_InputField email;
     [SerializeField] TMP_InputField nametoread;
@@ -89,7 +86,6 @@ public class FirebaseController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        reference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
     public void TestHundredSave()
@@ -196,27 +192,27 @@ public class FirebaseController : MonoBehaviour
 
 
 
-        reference.Child("Users").Child(user.userId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
-        {
-          if (task.IsCompleted)
-          {
-              Debug.Log("successfully added data to firebase");
+      //  reference.Child("Users").Child(user.userId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+      //  {
+      //    if (task.IsCompleted)
+      //    {
+      //        Debug.Log("successfully added data to firebase");
 
-              // if it is firstNickNamePanel, then diable it
-              if (CreateNickNamePanel.activeInHierarchy)
-              {
-                  StartCoroutine(SetFirstNickNamePanel(false));
-              }
-              StartCoroutine(SetToUI()); // wait for one frame, then add to UI
-              SpecialData.Instance.user = user;
-              Debug.Log("successfully added to UI");
-          }
-          else
-          {
-              Debug.Log("not successfull");
+      //        // if it is firstNickNamePanel, then diable it
+      //        if (CreateNickNamePanel.activeInHierarchy)
+      //        {
+      //            StartCoroutine(SetFirstNickNamePanel(false));
+      //        }
+      //        StartCoroutine(SetToUI()); // wait for one frame, then add to UI
+      //        SpecialData.Instance.user = user;
+      //        Debug.Log("successfully added to UI");
+      //    }
+      //    else
+      //    {
+      //        Debug.Log("not successfull");
 
-          }
-      });
+      //    }
+      //});
     }
 
 
@@ -229,35 +225,35 @@ public class FirebaseController : MonoBehaviour
 
 
         Debug.Log("ReadData()");
-        reference.Child("Version").GetValueAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCompleted)
-            {
-                Debug.Log("Reading");
-                DataSnapshot snapshot = task.Result;
-                gameVersionMustBe = int.Parse(snapshot.Child("version").Value.ToString());
-                Debug.Log("Version: " + gameVersionMustBe);
+        //reference.Child("Version").GetValueAsync().ContinueWithOnMainThread(task =>
+        //{
+        //    if (task.IsCompleted)
+        //    {
+        //        Debug.Log("Reading");
+        //        DataSnapshot snapshot = task.Result;
+        //        gameVersionMustBe = int.Parse(snapshot.Child("version").Value.ToString());
+        //        Debug.Log("Version: " + gameVersionMustBe);
 
 
-                // if game version is good
-                if (LocalDatas.Instance.currentVersion == gameVersionMustBe)
-                {
-                    Debug.Log("reading user datas line 238");
-                    ReadUserDatas(playerID);
-                }
-                else
-                {
-                    // Update Panel
-                    Debug.Log("Needs update");
-                    MenuUIController.Instance.OpenUpdatePanel();
-                }
+        //        // if game version is good
+        //        if (LocalDatas.Instance.currentVersion == gameVersionMustBe)
+        //        {
+        //            Debug.Log("reading user datas line 238");
+        //            ReadUserDatas(playerID);
+        //        }
+        //        else
+        //        {
+        //            // Update Panel
+        //            Debug.Log("Needs update");
+        //            MenuUIController.Instance.OpenUpdatePanel();
+        //        }
 
-            }
-            else
-            {
-                Debug.Log("ERROR");
-            }
-        });
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("ERROR");
+        //    }
+        //});
 
 
 
@@ -266,155 +262,155 @@ public class FirebaseController : MonoBehaviour
     private void ReadUserDatas(string playerID)
     {
         Debug.Log("ReadUserDatas()");
-        reference.Child("Users").Child(playerID).GetValueAsync().ContinueWithOnMainThread(task =>
-        {
+        //reference.Child("Users").Child(playerID).GetValueAsync().ContinueWithOnMainThread(task =>
+        //{
 
-            if (task.IsCompleted)
-            {
-                Debug.Log("Reading datas...");
+        //    if (task.IsCompleted)
+        //    {
+        //        Debug.Log("Reading datas...");
 
-                DataSnapshot snapshot = task.Result;
-
-
+        //        DataSnapshot snapshot = task.Result;
 
 
-                if (!snapshot.Exists)
-                {
-                    // TODO Tuto panel ...
-                    //StartCoroutine(SetFirstNickNamePanel(true));
-                    MenuUIController.Instance.OpenTutorialPanel();
-                    LocalDatas.Instance.currentCharacterIndex = 0;
-                    LocalDatas.Instance.ResetLocalDatas();
-                    StartCoroutine(SetLoadingPanel(1f));
-                    Debug.Log("Does not exist");
-                }
-                else
-                {
-
-                    #region setting db datas to datas
-
-                    string _nick = snapshot.Child("nickName").Value.ToString();
-                    Debug.Log("nick done!");
-                    int _lvl = int.Parse(snapshot.Child("level").Value.ToString());
-                    int _xp = int.Parse(snapshot.Child("xp").Value.ToString());
-                    int _ssCoin = int.Parse(snapshot.Child("ssCoin").Value.ToString());
-                    int _starCoin = int.Parse(snapshot.Child("starCoin").Value.ToString());
-                    Debug.Log("nick zad done!");
-
-                    int[] generals = new int[7];
-                    generals[0] = int.Parse(snapshot.Child("gs").Child("generalWin").Value.ToString());
-                    generals[1] = int.Parse(snapshot.Child("gs").Child("generalLose").Value.ToString());
-                    generals[2] = int.Parse(snapshot.Child("gs").Child("generalMVP").Value.ToString());
-                    generals[3] = int.Parse(snapshot.Child("gs").Child("generalStone").Value.ToString());
-                    generals[4] = int.Parse(snapshot.Child("gs").Child("generalKill").Value.ToString());
-                    generals[5] = int.Parse(snapshot.Child("gs").Child("generalShot").Value.ToString());
-                    generals[6] = int.Parse(snapshot.Child("gs").Child("generalEndurance").Value.ToString());
-                    Debug.Log("generals done!");
-
-                    int[] runnerSkills = new int[10];
-                    runnerSkills[0] = int.Parse(snapshot.Child("rs").Child("rSpeedLevel").Value.ToString());
-                    runnerSkills[2] = int.Parse(snapshot.Child("rs").Child("rShieldLevel").Value.ToString());
-                    runnerSkills[4] = int.Parse(snapshot.Child("rs").Child("rInvisibilityLevel").Value.ToString());
-                    runnerSkills[1] = int.Parse(snapshot.Child("rs").Child("rAddHealth").Value.ToString());
-                    runnerSkills[3] = int.Parse(snapshot.Child("rs").Child("rTrapLevel").Value.ToString());
-                    runnerSkills[5] = int.Parse(snapshot.Child("rs").Child("rSDTLevel").Value.ToString());
-                    runnerSkills[6] = int.Parse(snapshot.Child("rs").Child("rTopViewLevel").Value.ToString());
-                    runnerSkills[7] = int.Parse(snapshot.Child("rs").Child("rWallLevel").Value.ToString());
-                    runnerSkills[8] = int.Parse(snapshot.Child("rs").Child("rHookLevel").Value.ToString());
-                    runnerSkills[9] = int.Parse(snapshot.Child("rs").Child("rBCLevel").Value.ToString());
-                    Debug.Log("runner skills done!");
-
-                    int[] catcherSkills = new int[10];
-                    catcherSkills[0] = int.Parse(snapshot.Child("cs").Child("cSpeedLevel").Value.ToString());
-                    //catcherSkills[1] = int.Parse(snapshot.Child("cs").Child("cShieldLevel").Value.ToString());
-                    catcherSkills[2] = int.Parse(snapshot.Child("cs").Child("cInvisibilityLevel").Value.ToString());
-                    catcherSkills[3] = int.Parse(snapshot.Child("cs").Child("cBallLevel").Value.ToString());
-                    catcherSkills[4] = int.Parse(snapshot.Child("cs").Child("cSDTlevel").Value.ToString());
-                    catcherSkills[5] = int.Parse(snapshot.Child("cs").Child("cTopViewLevel").Value.ToString());
-                    catcherSkills[6] = int.Parse(snapshot.Child("cs").Child("cWallLevel").Value.ToString());
-                    catcherSkills[7] = int.Parse(snapshot.Child("cs").Child("cHookLevel").Value.ToString());
-                    catcherSkills[8] = int.Parse(snapshot.Child("cs").Child("cDHLevel").Value.ToString());
-                    catcherSkills[9] = int.Parse(snapshot.Child("cs").Child("cBCLevel").Value.ToString());
-                    Debug.Log("catcher skills done!");
 
 
-                    string _chs = snapshot.Child("characters").Value.ToString();
-                    string _vfxs = snapshot.Child("vfxs").Value.ToString();
-                    string _maps = snapshot.Child("arenas").Value.ToString();
-                    Debug.Log("all skills done!");
-                    #endregion
-                    MenuUIController.Instance.CloseTutorialPanel();
-                    // StartCoroutine(SetFirstNickNamePanel(false));
-                    SetToUserObject(playerID, _nick, _lvl, _xp, _ssCoin, _starCoin, generals, runnerSkills, catcherSkills, _chs, _vfxs, _maps);
+        //        if (!snapshot.Exists)
+        //        {
+        //            // TODO Tuto panel ...
+        //            //StartCoroutine(SetFirstNickNamePanel(true));
+        //            MenuUIController.Instance.OpenTutorialPanel();
+        //            LocalDatas.Instance.currentCharacterIndex = 0;
+        //            LocalDatas.Instance.ResetLocalDatas();
+        //            StartCoroutine(SetLoadingPanel(1f));
+        //            Debug.Log("Does not exist");
+        //        }
+        //        else
+        //        {
 
-                    LocalDatas.Instance.SetDatasToLocalDatas(playerID, _nick, _lvl, _xp, _ssCoin, _starCoin, generals, runnerSkills, catcherSkills, _chs, _vfxs, _maps);
+        //            #region setting db datas to datas
 
-                    if (LocalDatas.Instance.xp >= SomeDatas.Instance.xpPerLevel[LocalDatas.Instance.level - 1])
-                    {
-                        //TODO LevelUp sound
-                        Debug.Log("Level up");
+        //            string _nick = snapshot.Child("nickName").Value.ToString();
+        //            Debug.Log("nick done!");
+        //            int _lvl = int.Parse(snapshot.Child("level").Value.ToString());
+        //            int _xp = int.Parse(snapshot.Child("xp").Value.ToString());
+        //            int _ssCoin = int.Parse(snapshot.Child("ssCoin").Value.ToString());
+        //            int _starCoin = int.Parse(snapshot.Child("starCoin").Value.ToString());
+        //            Debug.Log("nick zad done!");
 
-                        StartCoroutine(ShowCongratsPanel());
+        //            int[] generals = new int[7];
+        //            generals[0] = int.Parse(snapshot.Child("gs").Child("generalWin").Value.ToString());
+        //            generals[1] = int.Parse(snapshot.Child("gs").Child("generalLose").Value.ToString());
+        //            generals[2] = int.Parse(snapshot.Child("gs").Child("generalMVP").Value.ToString());
+        //            generals[3] = int.Parse(snapshot.Child("gs").Child("generalStone").Value.ToString());
+        //            generals[4] = int.Parse(snapshot.Child("gs").Child("generalKill").Value.ToString());
+        //            generals[5] = int.Parse(snapshot.Child("gs").Child("generalShot").Value.ToString());
+        //            generals[6] = int.Parse(snapshot.Child("gs").Child("generalEndurance").Value.ToString());
+        //            Debug.Log("generals done!");
 
-                        AudioManager.Instance.Play(0);
+        //            int[] runnerSkills = new int[10];
+        //            runnerSkills[0] = int.Parse(snapshot.Child("rs").Child("rSpeedLevel").Value.ToString());
+        //            runnerSkills[2] = int.Parse(snapshot.Child("rs").Child("rShieldLevel").Value.ToString());
+        //            runnerSkills[4] = int.Parse(snapshot.Child("rs").Child("rInvisibilityLevel").Value.ToString());
+        //            runnerSkills[1] = int.Parse(snapshot.Child("rs").Child("rAddHealth").Value.ToString());
+        //            runnerSkills[3] = int.Parse(snapshot.Child("rs").Child("rTrapLevel").Value.ToString());
+        //            runnerSkills[5] = int.Parse(snapshot.Child("rs").Child("rSDTLevel").Value.ToString());
+        //            runnerSkills[6] = int.Parse(snapshot.Child("rs").Child("rTopViewLevel").Value.ToString());
+        //            runnerSkills[7] = int.Parse(snapshot.Child("rs").Child("rWallLevel").Value.ToString());
+        //            runnerSkills[8] = int.Parse(snapshot.Child("rs").Child("rHookLevel").Value.ToString());
+        //            runnerSkills[9] = int.Parse(snapshot.Child("rs").Child("rBCLevel").Value.ToString());
+        //            Debug.Log("runner skills done!");
 
-                        return;
-                    }
+        //            int[] catcherSkills = new int[10];
+        //            catcherSkills[0] = int.Parse(snapshot.Child("cs").Child("cSpeedLevel").Value.ToString());
+        //            //catcherSkills[1] = int.Parse(snapshot.Child("cs").Child("cShieldLevel").Value.ToString());
+        //            catcherSkills[2] = int.Parse(snapshot.Child("cs").Child("cInvisibilityLevel").Value.ToString());
+        //            catcherSkills[3] = int.Parse(snapshot.Child("cs").Child("cBallLevel").Value.ToString());
+        //            catcherSkills[4] = int.Parse(snapshot.Child("cs").Child("cSDTlevel").Value.ToString());
+        //            catcherSkills[5] = int.Parse(snapshot.Child("cs").Child("cTopViewLevel").Value.ToString());
+        //            catcherSkills[6] = int.Parse(snapshot.Child("cs").Child("cWallLevel").Value.ToString());
+        //            catcherSkills[7] = int.Parse(snapshot.Child("cs").Child("cHookLevel").Value.ToString());
+        //            catcherSkills[8] = int.Parse(snapshot.Child("cs").Child("cDHLevel").Value.ToString());
+        //            catcherSkills[9] = int.Parse(snapshot.Child("cs").Child("cBCLevel").Value.ToString());
+        //            Debug.Log("catcher skills done!");
+
+
+        //            string _chs = snapshot.Child("characters").Value.ToString();
+        //            string _vfxs = snapshot.Child("vfxs").Value.ToString();
+        //            string _maps = snapshot.Child("arenas").Value.ToString();
+        //            Debug.Log("all skills done!");
+        //            #endregion
+        //            MenuUIController.Instance.CloseTutorialPanel();
+        //            // StartCoroutine(SetFirstNickNamePanel(false));
+        //            SetToUserObject(playerID, _nick, _lvl, _xp, _ssCoin, _starCoin, generals, runnerSkills, catcherSkills, _chs, _vfxs, _maps);
+
+        //            LocalDatas.Instance.SetDatasToLocalDatas(playerID, _nick, _lvl, _xp, _ssCoin, _starCoin, generals, runnerSkills, catcherSkills, _chs, _vfxs, _maps);
+
+        //            if (LocalDatas.Instance.xp >= SomeDatas.Instance.xpPerLevel[LocalDatas.Instance.level - 1])
+        //            {
+        //                //TODO LevelUp sound
+        //                Debug.Log("Level up");
+
+        //                StartCoroutine(ShowCongratsPanel());
+
+        //                AudioManager.Instance.Play(0);
+
+        //                return;
+        //            }
                     
-                    SpecialData.Instance.user = user;
-                    //SpecialData.Instance.firstTime = false;
+        //            SpecialData.Instance.user = user;
+        //            //SpecialData.Instance.firstTime = false;
 
-                    StartCoroutine(SetToUI()); // wait for one frame, then add to UI
+        //            StartCoroutine(SetToUI()); // wait for one frame, then add to UI
 
-                    if (MenuCommonObjects.Instance.loadingSlider != null) MenuUIController.Instance.SetSliderWithTweening(0.3f, 0.5f);
+        //            if (MenuCommonObjects.Instance.loadingSlider != null) MenuUIController.Instance.SetSliderWithTweening(0.3f, 0.5f);
 
-                }
+        //        }
 
-                Debug.Log("Reading done!");
-                AudioManager.Instance.Play(0);
-                if (!PhotonNetwork.IsConnectedAndReady)
-                {
-                    Debug.Log("Connecting to Photon Network Master.");
-                    PhotonNetwork.GameVersion = "0.0.1";
-                    PhotonNetwork.ConnectUsingSettings();
-                }
-                else
-                {
-                    Debug.Log("Already in lobby");
-                    if (MenuCommonObjects.Instance.loadingSlider != null) MenuUIController.Instance.SetSliderWithTweening(0.5f, 1f);
-                    StartCoroutine(SetLoadingPanel(1f));
-                }
-                //// If Version is good
-                //if (int.Parse(snapshot.Child("version").Value.ToString()) == gameVersionMustBe)
-                //{
-                //    if (!PhotonNetwork.IsConnectedAndReady)
-                //    {
-                //        Debug.Log("Connecting to Photon Network Master.");
-                //        PhotonNetwork.GameVersion = "0.0.1";
-                //        PhotonNetwork.ConnectUsingSettings();
-                //    }
-                //    else
-                //    {
-                //        Debug.Log("Already in lobby");
-                //        if (MenuCommonObjects.Instance.loadingSlider != null) MenuUIController.Instance.SetSliderWithTweening(0.5f, 1f);
-                //        StartCoroutine(SetLoadingPanel(false, 1f));
-                //    }
-                //}
-                //// If it must be updated
-                //else
-                //{
-                //    Debug.Log("Must be updated");
-                //    StartCoroutine(SetLoadingPanel(false, 1f));
-                //    MenuUIController.Instance.OpenUpdatePanel();
-                //    LocalDatas.Instance.canRotateObject = false;
-                //}
-            }
-            else
-            {
-                Debug.Log("not successfull");
-                SceneManager.LoadScene(1);
-            }
-        });
+        //        Debug.Log("Reading done!");
+        //        AudioManager.Instance.Play(0);
+        //        if (!PhotonNetwork.IsConnectedAndReady)
+        //        {
+        //            Debug.Log("Connecting to Photon Network Master.");
+        //            PhotonNetwork.GameVersion = "0.0.1";
+        //            PhotonNetwork.ConnectUsingSettings();
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("Already in lobby");
+        //            if (MenuCommonObjects.Instance.loadingSlider != null) MenuUIController.Instance.SetSliderWithTweening(0.5f, 1f);
+        //            StartCoroutine(SetLoadingPanel(1f));
+        //        }
+        //        //// If Version is good
+        //        //if (int.Parse(snapshot.Child("version").Value.ToString()) == gameVersionMustBe)
+        //        //{
+        //        //    if (!PhotonNetwork.IsConnectedAndReady)
+        //        //    {
+        //        //        Debug.Log("Connecting to Photon Network Master.");
+        //        //        PhotonNetwork.GameVersion = "0.0.1";
+        //        //        PhotonNetwork.ConnectUsingSettings();
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        Debug.Log("Already in lobby");
+        //        //        if (MenuCommonObjects.Instance.loadingSlider != null) MenuUIController.Instance.SetSliderWithTweening(0.5f, 1f);
+        //        //        StartCoroutine(SetLoadingPanel(false, 1f));
+        //        //    }
+        //        //}
+        //        //// If it must be updated
+        //        //else
+        //        //{
+        //        //    Debug.Log("Must be updated");
+        //        //    StartCoroutine(SetLoadingPanel(false, 1f));
+        //        //    MenuUIController.Instance.OpenUpdatePanel();
+        //        //    LocalDatas.Instance.canRotateObject = false;
+        //        //}
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("not successfull");
+        //        SceneManager.LoadScene(1);
+        //    }
+        //});
     }
 
     public IEnumerator CheckInternetConnection()

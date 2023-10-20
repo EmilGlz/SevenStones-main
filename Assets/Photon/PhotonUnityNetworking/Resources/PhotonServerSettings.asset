@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
   AppSettings:
-    AppIdRealtime: 9c00a28f-4fab-4c00-a30d-e596f9f8ca38
+    AppIdRealtime: 230ddea3-58e2-4e26-93dc-0b7e9c7aeb4b
     AppIdChat: 
     AppIdVoice: 
     AppVersion: 
@@ -57,5 +57,5 @@ MonoBehaviour:
   - TrapPlaced
   - WallPlaced
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 1
