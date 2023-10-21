@@ -1422,7 +1422,7 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
         exitButton.SetActive(false);
         PhotonNetworkingMain.Instance.inGame = false;
         AudioManager.Instance.Stop(8);
-        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.LoadLevel(0);
         //SceneManager.LoadScene(1);
     }
 

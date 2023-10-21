@@ -150,7 +150,7 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
                 ///
             }
             inGame = true;
-            PhotonNetwork.LoadLevel(2);
+            PhotonNetwork.LoadLevel(1);
         }
         else SceneManager.LoadScene(0);
     }
