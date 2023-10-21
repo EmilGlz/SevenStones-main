@@ -728,7 +728,7 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
         if (playerCount == 0)
         {
             //Debug.LogError("Room created but nobody is in the room!!!");
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
         else
         {
@@ -1224,18 +1224,19 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
         bool mvp = AmIMVP(win);
         int myNewScore = (myScore + GameLogicData.Instance.enduranceTime) * 10 + (mvp ? 2000 : 0) + (win ? 1000 : 0);
 
-        SpecialData.Instance.user.gs.generalWin += win ? 1 : 0;
-        SpecialData.Instance.user.gs.generalLose += win ? 0 : 1;
-        SpecialData.Instance.user.gs.generalMVP += mvp ? 1 : 0;
-        SpecialData.Instance.user.gs.generalStone += myStones;
-        SpecialData.Instance.user.gs.generalKill += myShoot;
-        SpecialData.Instance.user.gs.generalShot += GameLogicData.Instance.shootCounter;
-        SpecialData.Instance.user.gs.generalEndurance += GameLogicData.Instance.enduranceTime;
+        var user = Settings.User;
+        user.gs.generalWin += win ? 1 : 0;
+        user.gs.generalLose += win ? 0 : 1;
+        user.gs.generalMVP += mvp ? 1 : 0;
+        user.gs.generalStone += myStones;
+        user.gs.generalKill += myShoot;
+        user.gs.generalShot += GameLogicData.Instance.shootCounter;
+        user.gs.generalEndurance += GameLogicData.Instance.enduranceTime;
 
-        SpecialData.Instance.user.xp += (int)(myNewScore * .11) * 5;
-        SpecialData.Instance.user.ssCoin += (int)(myNewScore * .11);
-        SpecialData.Instance.user.starCoin += 0;
-
+        user.xp += (int)(myNewScore * .11) * 5;
+        user.ssCoin += (int)(myNewScore * .11);
+        user.starCoin += 0;
+        Settings.User = user;
         SaveData();
 
         PhotonNetwork.LeaveRoom();
@@ -1272,7 +1273,6 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
                     LeanTween.scale(myScoreLeftPanel.GetComponent<RectTransform>(), Vector3.one, .3f).setEaseOutBack(); 
                     });
                 });
-        //.setOnComplete(() => { LeanTween.scale(star, Vector3.one, .3f).setEaseOutBack(); });
     }
     private void TweenCpMVP()
     {
@@ -1450,6 +1450,10 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
 
     public void ManageSkills(int runnerSkill, int runnerSkillLevel, int catcherSkill, int catcherSkillLevel)
     {
+        if (runnerSkillLevel == 0)
+            runnerSkillLevel = 1;
+        if (catcherSkillLevel == 0)
+            catcherSkillLevel = 1;
         switch (runnerSkill)
         {
             //Add health skill checked on GameStart
@@ -2069,22 +2073,7 @@ public class GameLogicPlayer : MonoBehaviour, IOnEventCallback
     #region FireBase
     public void SaveData()
     {
-        if (SpecialData.Instance.user.userId == "")
-        {
-            SpecialData.Instance.user.userId = "VirtualIllusions";
-        }
-        string json = JsonUtility.ToJson(SpecialData.Instance.user);
-        //reference.Child("Users").Child(SpecialData.Instance.user.userId.ToString()).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
-        //{
-        //    if (task.IsCompleted)
-        //    {
-        //        //Debug.Log("successfully added data to firebase");
-        //    }
-        //    else
-        //    {
-        //        //Debug.Log("not successfull");
-        //    }
-        //});
+        SaveLoadManager.Save(Settings.User);
     }
     #endregion
 }

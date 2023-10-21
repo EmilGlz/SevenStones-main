@@ -66,7 +66,7 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
         if (!inGame)
         {
             Debug.Log("Loading Menu Scene.");
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
         else if (firstTimeDisconnect)
         {
@@ -90,7 +90,7 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(3f);
         GameObjectsData.Instance.reconnectInfo.text = "Reconnection failed. Menu is loading...";
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 
     //Callback when player try to reconnect and failed
@@ -121,8 +121,8 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
         {
             MenuCommonObjects.Instance.loadingPanel.SetActive(true);
 
-            PlayerPrefs.SetString(PLAYERNICKPREF, LocalDatas.Instance.nickName);
-            PlayerPrefs.SetInt(PLAYERLVLPREF, LocalDatas.Instance.level);
+            PlayerPrefs.SetString(PLAYERNICKPREF, Settings.User.nickName);
+            PlayerPrefs.SetInt(PLAYERLVLPREF, Settings.User.level);
             PlayerPrefs.SetInt(CHARACTERINDEXPREF, LocalDatas.Instance.currentCharacterIndex);
             PlayerPrefs.SetInt(RUNNERSKILLPREF, LocalDatas.Instance.currentRunnerSkill);
             PlayerPrefs.SetInt(RUNNERSKILLLVLPREF, LocalDatas.Instance.runnerSkillsLevels[LocalDatas.Instance.currentRunnerSkill]);
@@ -135,7 +135,7 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
             if (failedAttempts > 3)
             {
                 failedAttempts = 0;
-                SceneManager.LoadScene(1);
+                SceneManager.LoadScene(0);
             }
             if (PhotonNetwork.InLobby)
             {
@@ -152,7 +152,7 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
             inGame = true;
             PhotonNetwork.LoadLevel(2);
         }
-        else SceneManager.LoadScene(1);
+        else SceneManager.LoadScene(0);
     }
 
     //There is no room to join so player create new room
@@ -171,7 +171,7 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.CreateRoom(null, roomOptions, TypedLobby.Default))
         {
             Debug.Log("Create room return false!!! Loading Menu Scene");
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
     }
 

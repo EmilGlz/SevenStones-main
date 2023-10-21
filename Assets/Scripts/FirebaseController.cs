@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using Photon.Pun;
-using UnityEngine.Networking;
 
 
 
@@ -14,11 +11,9 @@ public class FirebaseController : MonoBehaviour
     [SerializeField] TMP_InputField username;
     [SerializeField] TMP_InputField email;
     [SerializeField] TMP_InputField nametoread;
-    //[SerializeField] TMP_Text data;
 
     public GameObject CreateNickNamePanel;
-    // [SerializeField] GameObject loadingPanel;
-
+    
     [SerializeField] GameObject xpScalingSlider;
     [SerializeField] float congratsSliderTime;
 
@@ -46,7 +41,6 @@ public class FirebaseController : MonoBehaviour
     public GameObject[] arenaPriceTextPanels;
 
     public TMP_Text[] selectTextsInArenaButtons;
-    //public bool readingFinished = false;
 
     [SerializeField] TMP_Text[] characterNamesInCharacterPanel;
 
@@ -55,15 +49,6 @@ public class FirebaseController : MonoBehaviour
     public int prizeSkillIndex = -1;
 
     public GameObject noInternetImage;
-
-    //[SerializeField] GameObject
-
-    const string profilePicIndex = "ppi";
-    const string characterIndex = "ci";
-    const string vfxIndex = "vfxi";
-    const string mapIndex = "mi";
-
-
 
     public User user = new User();
     public Version v = new Version();
@@ -81,139 +66,6 @@ public class FirebaseController : MonoBehaviour
     }
 
     #endregion
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    public void TestHundredSave()
-    {
-        for (int i = 0; i < 1000; i++)
-        {
-            user.userId = i.ToString();
-            SaveData();
-        }
-    }
-
-    public void SetLocalDatasToUserObject()
-    {
-        user.userId = LocalDatas.Instance.userID;
-        user.nickName = LocalDatas.Instance.nickName;
-        user.level = LocalDatas.Instance.level;
-        user.xp = LocalDatas.Instance.xp;
-        user.ssCoin = LocalDatas.Instance.ssCoin;
-        user.starCoin = LocalDatas.Instance.crystalCoin;
-
-
-        user.gs.generalWin = LocalDatas.Instance.generalWin;
-        user.gs.generalLose = LocalDatas.Instance.generalLose;
-        user.gs.generalMVP = LocalDatas.Instance.generalMVPCount;
-        user.gs.generalStone = LocalDatas.Instance.generalStone;
-        user.gs.generalKill = LocalDatas.Instance.generalKill;
-        user.gs.generalShot = LocalDatas.Instance.generalShot;
-        user.gs.generalEndurance = LocalDatas.Instance.generalEndurance;
-
-        user.rs.rSpeedLevel = LocalDatas.Instance.runnerSpeedLevel;
-        user.rs.rShieldLevel = LocalDatas.Instance.runnerShieldLevel;
-        user.rs.rInvisibilityLevel = LocalDatas.Instance.runnerInvisibilityLevel;
-        user.rs.rAddHealth = LocalDatas.Instance.runnerAddHealth;
-        user.rs.rTrapLevel = LocalDatas.Instance.runnerTrapLevel;
-        user.rs.rSDTLevel = LocalDatas.Instance.runnerSlowdownTrapLevel;
-        user.rs.rTopViewLevel = LocalDatas.Instance.runnerTopViewLevel;
-        user.rs.rWallLevel = LocalDatas.Instance.runnerWallLevel;
-        user.rs.rHookLevel = LocalDatas.Instance.runnerHookLevel;
-        user.rs.rBCLevel = LocalDatas.Instance.runnerBCLevel;
-
-        user.cs.cSpeedLevel = LocalDatas.Instance.catcherSpeedLevel;
-        //user.cs.cShieldLevel = LocalDatas.Instance.catcherShieldLevel;
-        user.cs.cInvisibilityLevel = LocalDatas.Instance.catcherInvisibilityLevel;
-        user.cs.cBallLevel = LocalDatas.Instance.catcherBallLevel;
-        user.cs.cSDTlevel = LocalDatas.Instance.catcherSlowdownTrapLevel;
-        user.cs.cTopViewLevel = LocalDatas.Instance.catcherTopViewLevel;
-        user.cs.cWallLevel = LocalDatas.Instance.catcherWallLevel;
-        user.cs.cHookLevel = LocalDatas.Instance.catcherHookLevel;
-        user.cs.cDHLevel = LocalDatas.Instance.catcherDeadlyHitLevel;
-        user.cs.cBCLevel = LocalDatas.Instance.catcherBCLevel;
-
-
-
-        user.characters = "";
-        for (int i = 0; i < LocalDatas.Instance.characters.Length; i++)
-        {
-            user.characters += LocalDatas.Instance.characters[i];
-        }
-
-        user.vfxs = "";
-        for (int i = 0; i < LocalDatas.Instance.ballSkins.Length; i++)
-        {
-            user.vfxs += LocalDatas.Instance.ballSkins[i];
-        }
-
-        user.arenas = "";
-        for (int i = 0; i < LocalDatas.Instance.arenas.Length; i++)
-        {
-            user.arenas += LocalDatas.Instance.arenas[i];
-        }
-
-
-    }
-
-    //public void Save()
-    //{
-    //    string json = JsonUtility.ToJson(v);
-
-    //    reference.Child("Version").SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
-    //    {
-    //        if (task.IsCompleted)
-    //        {
-    //            Debug.Log("successfully added data to firebase");
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("Failed to add to firebase");
-    //        }
-    //    });
-    //}
-
-
-    public void SaveData()
-    {
-
-        SetLocalDatasToUserObject();
-
-        if (user.userId.Equals(null) || user.userId.Equals(""))
-        {
-            user.userId = "VirtualIllusions";
-        }
-
-        string json = JsonUtility.ToJson(user);
-
-
-
-      //  reference.Child("Users").Child(user.userId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
-      //  {
-      //    if (task.IsCompleted)
-      //    {
-      //        Debug.Log("successfully added data to firebase");
-
-      //        // if it is firstNickNamePanel, then diable it
-      //        if (CreateNickNamePanel.activeInHierarchy)
-      //        {
-      //            StartCoroutine(SetFirstNickNamePanel(false));
-      //        }
-      //        StartCoroutine(SetToUI()); // wait for one frame, then add to UI
-      //        SpecialData.Instance.user = user;
-      //        Debug.Log("successfully added to UI");
-      //    }
-      //    else
-      //    {
-      //        Debug.Log("not successfull");
-
-      //    }
-      //});
-    }
 
 
     public void ReadData(string playerID)
@@ -448,82 +300,6 @@ public class FirebaseController : MonoBehaviour
 
     }
 
-    public void AddXPTest(int addingXP)
-    {
-        LocalDatas.Instance.xp += addingXP;
-        if (LocalDatas.Instance.xp >= SomeDatas.Instance.xpPerLevel[LocalDatas.Instance.level - 1])
-        {
-            //_xp = _xp - SomeDatas.Instance.xpPerLevel[LocalDatas.Instance.currentLevelIntervalIndex];
-            //_lvl++;
-            LocalDatas.Instance.xp -= SomeDatas.Instance.xpPerLevel[LocalDatas.Instance.level - 1];
-            LocalDatas.Instance.level++;
-        }
-        SaveData();
-    }
-    private void SetToUserObject(string _id, string _nick, int _lvl, int _xp, int _ssCoin, int _starCoin, int[] generals, int[] runnerSkills, int[] catcherSkills, string _chs, string _vfxs, string _arenas)
-    {
-        user.userId = _id;
-        user.nickName = _nick;
-        user.level = _lvl;
-        user.xp = _xp;
-        user.ssCoin = _ssCoin;
-        user.starCoin = _starCoin;
-
-        user.gs.generalWin = generals[0];
-        user.gs.generalLose = generals[1];
-        user.gs.generalMVP = generals[2];
-        user.gs.generalStone = generals[3];
-        user.gs.generalKill = generals[4];
-        user.gs.generalShot = generals[5];
-        user.gs.generalEndurance = generals[6];
-
-        user.rs.rSpeedLevel = runnerSkills[0];
-        user.rs.rAddHealth = runnerSkills[1];
-        user.rs.rShieldLevel = runnerSkills[2];
-        user.rs.rTrapLevel = runnerSkills[3];
-        user.rs.rInvisibilityLevel = runnerSkills[4];
-        user.rs.rSDTLevel = runnerSkills[5];
-        user.rs.rTopViewLevel = runnerSkills[6];
-        user.rs.rWallLevel = runnerSkills[7];
-        user.rs.rHookLevel = runnerSkills[8];
-        user.rs.rBCLevel = runnerSkills[9];
-
-        user.cs.cSpeedLevel = catcherSkills[0];
-        //user.cs.cShieldLevel = catcherSkills[1];
-        user.cs.cInvisibilityLevel = catcherSkills[2];
-        user.cs.cBallLevel = catcherSkills[3];
-        user.cs.cSDTlevel = catcherSkills[4];
-        user.cs.cTopViewLevel = catcherSkills[5];
-        user.cs.cWallLevel = catcherSkills[6];
-        user.cs.cHookLevel = catcherSkills[7];
-        user.cs.cDHLevel = catcherSkills[8];
-        user.cs.cBCLevel = catcherSkills[9];
-
-        user.characters = _chs;
-        user.vfxs = _vfxs;
-        user.arenas = _arenas;
-    }
-
-    public IEnumerator SetFirstNickNamePanel(bool setActive)
-    {
-        yield return null;
-        Debug.Log("Setting firstNickPanel: " + setActive);
-        MenuUIController.Instance.CheckIfInMenu();
-
-        if (LocalDatas.Instance.isInMainMenu)
-        {
-            LocalDatas.Instance.Sed3dObjectParent(!setActive);
-        }
-        else
-        {
-            LocalDatas.Instance.Sed3dObjectParent(false);
-        }
-
-        CreateNickNamePanel.SetActive(setActive);
-        MenuCommonObjects.Instance.loadingPanel.SetActive(false);
-
-    }
-
     public void SetFirstNickPanel_void(bool setActive)
     {
         Debug.Log("Setting firstNickPanel: " + setActive);
@@ -534,98 +310,6 @@ public class FirebaseController : MonoBehaviour
         CreateNickNamePanel.SetActive(setActive);
         MenuCommonObjects.Instance.loadingPanel.SetActive(false);
 
-    }
-
-    //IEnumerator SetToUIBeforeReading()
-    //{
-    //    yield return null;
-    //    SetNotificationIconsInMenu(-1);
-    //    SetOrangeIconsInVFXPanel(-1);
-    //    SetOrangeIconsInCharactersPanel(-1);
-    //}
-
-    IEnumerator SetToUI()
-    {
-        yield return null;
-        Debug.Log("Starting Setting To UI");
-        LocalDatas.Instance.currentCharacterIndex = PlayerPrefs.GetInt(characterIndex);
-        LocalDatas.Instance.currentBallSkinIndex = PlayerPrefs.GetInt(vfxIndex);
-        LocalDatas.Instance.currentMapIndex = (byte)PlayerPrefs.GetInt(mapIndex);
-
-        for (int i = 0; i < SomeDatas.Instance.characterNames.Length; i++)
-        {
-            characterNamesInCharacterPanel[i].text = SomeDatas.Instance.characterNames[i];
-        }
-
-
-        if (LocalDatas.Instance.characters[LocalDatas.Instance.currentCharacterIndex] == 0)
-        {
-            // changing character to index 0
-            PlayerPrefs.SetInt(characterIndex, 0);
-            LocalDatas.Instance.currentCharacterIndex = 0;
-        }
-
-        if (LocalDatas.Instance.ballSkins[LocalDatas.Instance.currentBallSkinIndex] == 0)
-        {
-            PlayerPrefs.SetInt(vfxIndex, 0);
-            LocalDatas.Instance.currentBallSkinIndex = 0;
-        }
-
-        if (LocalDatas.Instance.arenas[LocalDatas.Instance.currentMapIndex] == 0)
-        {
-            PlayerPrefs.SetInt(mapIndex, 0);
-            LocalDatas.Instance.currentMapIndex = 0;
-        }
-
-        LocalDatas.Instance.ChangeAllPPs(PlayerPrefs.GetInt(profilePicIndex));
-        LocalDatas.Instance.SetSkillLevelsToArray();
-        MenuUIController.Instance.CheckIfInMenu();
-        if (LocalDatas.Instance.isInMainMenu)
-        {
-            LocalDatas.Instance.Sed3dObjectParent(true);
-            LocalDatas.Instance.SetCharacterObject(PlayerPrefs.GetInt(characterIndex));
-            MenuUIController.Instance.characterNameInPlayPanel.text = SomeDatas.Instance.characterNames[LocalDatas.Instance.currentCharacterIndex].ToString();
-        }
-        else
-        {
-            LocalDatas.Instance.SetCharacterObject(PlayerPrefs.GetInt(characterIndex));
-            MenuUIController.Instance.characterNameInPlayPanel.text = SomeDatas.Instance.characterNames[LocalDatas.Instance.currentCharacterIndex].ToString();
-        }
-        SetArenaDatasToUI();
-        MenuUIController.Instance.SetCoinsPrices();
-        LocalDatas.Instance.SetAllLocalDatasToUI();
-        //MenuCommonObjects.Instance.loadingPanel.SetActive(false);
-        StartCoroutine(LocalDatas.Instance.SetSkillButtonsPlayPanelCatcher() );
-        StartCoroutine(LocalDatas.Instance.SetSkillButtonsPlayPanelRunner() );
-        Debug.Log("Setting to UI finished");
-    }
-
-    private void SetArenaDatasToUI()
-    {
-        for (int i = 0; i < arenaPriceTexts.Length; i++)
-        {
-            arenaPriceTexts[i].text = SomeDatas.Instance.arenaPrices[i].ToString();
-            // if arena[i] = 0, arenaPriceTextPanels.setFalse.
-            if (LocalDatas.Instance.arenas[i] == 0)
-            {
-                arenaPriceTextPanels[i].SetActive(true);
-                selectTextsInArenaButtons[i].gameObject.SetActive(false);
-            }
-            else
-            {
-                arenaPriceTextPanels[i].SetActive(false);
-                selectTextsInArenaButtons[i].gameObject.SetActive(true);
-                if (LocalDatas.Instance.currentMapIndex == i)
-                {
-                    selectTextsInArenaButtons[i].text = "Selected";
-                }
-                else
-                {
-                    selectTextsInArenaButtons[i].text = "Select";
-                }
-
-            }
-        }
     }
 
     IEnumerator ShowCongratsPanel()
@@ -640,15 +324,15 @@ public class FirebaseController : MonoBehaviour
         SetOrangeIconsInCharactersPanel(-1);
 
         //SScoin
-        prize1Text.text = SomeDatas.Instance.ssCoinPerLevel[LocalDatas.Instance.level - 1].ToString("n0");
-        LocalDatas.Instance.ssCoin += SomeDatas.Instance.ssCoinPerLevel[LocalDatas.Instance.level - 1];
+        prize1Text.text = SomeDatas.Instance.ssCoinPerLevel[Settings.User.level - 1].ToString("n0");
+        Settings.User.ssCoin += SomeDatas.Instance.ssCoinPerLevel[Settings.User.level - 1];
 
         // Diamond coin
-        prize2Text.text = LocalDatas.Instance.level.ToString();
-        LocalDatas.Instance.crystalCoin += LocalDatas.Instance.level;
+        prize2Text.text = Settings.User.level.ToString();
+        Settings.User.ssCoin += Settings.User.level;
 
         // Character, vfx, skill opened
-        if ((LocalDatas.Instance.level + 1) % 5 == 0)
+        if ((Settings.User.level + 1) % 5 == 0)
         {
             // TODO NEW VFX, CHARACTER, SKILL
             if ( CheckWhatIsPrize() ==  0) // character prize
@@ -658,7 +342,7 @@ public class FirebaseController : MonoBehaviour
                 SetNotificationIconsInMenu(0);
                 SetOrangeIconsInCharactersPanel( WhatIsCharacterPrize() );
                 prizeCharacterIndex = WhatIsCharacterPrize();
-                LocalDatas.Instance.characters[prizeCharacterIndex] = 1;
+                Utils.SetCharAtIndex(Settings.User.characters, prizeCharacterIndex, '1');
             }
             else if (CheckWhatIsPrize() == 1) // VFX prize
             {
@@ -666,7 +350,7 @@ public class FirebaseController : MonoBehaviour
                 SetNotificationIconsInMenu(1);
                 SetOrangeIconsInVFXPanel(WhatIsVFXPrize());
                 prizeVFXIndex = WhatIsVFXPrize();
-                LocalDatas.Instance.ballSkins[prizeVFXIndex] = 1;
+                Utils.SetCharAtIndex(Settings.User.vfxs, prizeVFXIndex, '1');
             }
             prize3Object.gameObject.SetActive(true);
         }
@@ -675,15 +359,15 @@ public class FirebaseController : MonoBehaviour
             prize3Object.gameObject.SetActive(false);
         }
 
-        congratsLevelText.text = (LocalDatas.Instance.level + 1).ToString();
+        congratsLevelText.text = (Settings.User.level + 1).ToString();
 
-        LocalDatas.Instance.xp -= SomeDatas.Instance.xpPerLevel[LocalDatas.Instance.level - 1];
-        LocalDatas.Instance.level++;
+        Settings.User.xp -= SomeDatas.Instance.xpPerLevel[Settings.User.level - 1];
+        Settings.User.level++;
         LocalDatas.Instance.currentLevelIntervalIndex = LocalDatas.Instance.SetLevelIntervalIndex();
         LocalDatas.Instance.SetLevelIntervalIndexForCharacter();
 
 
-        SaveData();
+        SaveLoadManager.Save(Settings.User);
 
         LocalDatas.Instance.OpenPanel1();
 
@@ -708,7 +392,7 @@ public class FirebaseController : MonoBehaviour
         // TODO length , 8
         for (int i = 0; i < 2; i++)
         {
-            if (SomeDatas.Instance.prizes[(LocalDatas.Instance.level + 1) / 5 - 1, i] == 1)
+            if (SomeDatas.Instance.prizes[(Settings.User.level + 1) / 5 - 1, i] == 1)
             {
                 res = i;
                 return res;
@@ -722,7 +406,7 @@ public class FirebaseController : MonoBehaviour
         int res = -1;
         for (int i = 0; i < SomeDatas.Instance.characterNames.Length; i++)
         {
-            if (LocalDatas.Instance.characters[i] == 0)
+            if (Settings.User.characters[i] == '0')
             {
                 res = i;
                 return res;
@@ -737,7 +421,7 @@ public class FirebaseController : MonoBehaviour
         int res = -1;
         for (int i = 0; i < SomeDatas.Instance.ballPrices.Length; i++)
         {
-            if (LocalDatas.Instance.ballSkins[i] == 0)
+            if (Settings.User.vfxs[i] == '0')
             {
                 res = i;
                 return res;
@@ -749,8 +433,8 @@ public class FirebaseController : MonoBehaviour
 
     public void SetFirstNickName(TMP_InputField nickNameInputfield)
     {
-        LocalDatas.Instance.nickName = nickNameInputfield.text;
-        SaveData();
+        Settings.User.nickName = nickNameInputfield.text;
+        SaveLoadManager.Save(Settings.User);
     }
 
     public void SetNotificationIconsInMenu(int index)
@@ -806,53 +490,6 @@ public class FirebaseController : MonoBehaviour
         }
     }
 
-    //public void SetOrangeIconsInSkillsPanelRunner(int index, bool setActive)
-    //{
-    //    if (index != -1)
-    //    {
-    //        orangeImagesInSkillPanelRunner[index].SetActive(setActive);
-    //    }
-    //    else
-    //    {
-    //        for (int i = 0; i < orangeImagesInSkillPanelRunner.Length; i++)
-    //        {
-    //            orangeImagesInSkillPanelRunner[i].SetActive(setActive);
-    //        }
-    //    }
-    //}
-
-    //public void SetOrangeIconsInSkillsPanelCatcher(int index, bool setActive)
-    //{
-    //    if (index != -1)
-    //    {
-    //        orangeImagesInSkillPanelCatcher[index].SetActive(setActive);
-    //    }
-    //    else
-    //    {
-    //        for (int i = 0; i < orangeImagesInSkillPanelCatcher.Length; i++)
-    //        {
-    //            orangeImagesInSkillPanelCatcher[i].SetActive(setActive);
-    //        }
-    //    }
-    //}
-
-    //public void SetOrangeIconsInSkillsCatcherRunner(int index, bool setActive) // 0-runner , 1-catcher
-    //{
-    //    if (index == 0)
-    //    {
-    //        orangeIconsInRunnerCatcherButtonsSkills[0].SetActive(setActive);
-    //    }
-    //    else if (index == 1)
-    //    {
-    //        orangeIconsInRunnerCatcherButtonsSkills[1].SetActive(setActive);
-    //    }
-    //    else
-    //    {
-    //        orangeIconsInRunnerCatcherButtonsSkills[0].SetActive(setActive);
-    //        orangeIconsInRunnerCatcherButtonsSkills[1].SetActive(setActive);
-    //    }
-    //}
-
     public bool CheckIfAllOrangesOffSkillRunner()
     {
         int s = 0;
@@ -905,14 +542,5 @@ public class FirebaseController : MonoBehaviour
         LeanTween.alpha(congratsPanel.GetComponent<RectTransform>(), 0f, 0.1f).setEase(LeanTweenType.pingPong);
         congratsPanel.GetComponent<Image>().raycastTarget = false;
         congratsPanelChild.SetActive(false);
-    }
-
-    public void RandomTest()
-    {
-        user.nickName = "Player" + Random.Range(0,100);
-        user.level = Random.Range(0,25);
-        user.xp = Random.Range(0,250);
-        user.ssCoin = Random.Range(0,250);
-        user.starCoin = Random.Range(0,250);
     }
 }

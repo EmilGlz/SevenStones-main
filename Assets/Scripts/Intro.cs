@@ -14,6 +14,6 @@ public class Intro : MonoBehaviour
     IEnumerator ChangeScene()
     {
         yield return new WaitForSeconds( videoTime );
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 }

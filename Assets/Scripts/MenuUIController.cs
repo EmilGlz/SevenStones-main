@@ -393,10 +393,10 @@ public class MenuUIController : MonoBehaviour
 
     public void AddDiamond(int value)
     {
-        LocalDatas.Instance.crystalCoin += value;
-        FirebaseController.Instance.SaveData();
-        //LocalDatas.Instance.ShowDatas();
-
+        var user = Settings.User;
+        user.starCoin += value;
+        Settings.User = user;
+        SaveLoadManager.Save(Settings.User);
     }
 
     #region loading functions
@@ -433,7 +433,7 @@ public class MenuUIController : MonoBehaviour
     public void TryAgainInMenu()
     {
         LeanTween.scale(tryAgainPanel, Vector3.zero, 0.5f).setOnComplete(() => {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         });
     }
 
@@ -591,14 +591,13 @@ public class MenuUIController : MonoBehaviour
     {
         if (pressedssCoinBUttonIndex >= 0)
         {
-            if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.ssCoinPrices[pressedssCoinBUttonIndex])
+            if (Settings.User.starCoin>= SomeDatas.Instance.ssCoinPrices[pressedssCoinBUttonIndex])
             {
                 // Buying
                 AudioManager.Instance.Play(2);
-                LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.ssCoinPrices[pressedssCoinBUttonIndex];
-                LocalDatas.Instance.ssCoin += SomeDatas.Instance.ssCoinValues[pressedssCoinBUttonIndex];
-                FirebaseController.Instance.SaveData();
-                LocalDatas.Instance.ShowDatas();
+                Settings.User.starCoin -= SomeDatas.Instance.ssCoinPrices[pressedssCoinBUttonIndex];
+                Settings.User.ssCoin += SomeDatas.Instance.ssCoinValues[pressedssCoinBUttonIndex];
+                SaveLoadManager.Save(Settings.User);
                 LocalDatas.Instance.SetUICoins();
             }
             else
@@ -725,22 +724,21 @@ public class MenuUIController : MonoBehaviour
     {
         if (currentRunnerSkillPressed == "Sprint")
         {
-            if (LocalDatas.Instance.runnerSpeedLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0]) // if skill level is not max for this level
+            if (Settings.User.rs.rSpeedLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
                 // If we are buying with sscoin
-                if (LocalDatas.Instance.runnerSpeedLevel != SomeDatas.Instance.runnerSpeedPrices.Length - 1)
+                if (Settings.User.rs.rSpeedLevel != SomeDatas.Instance.runnerSpeedPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerSpeedPrices[LocalDatas.Instance.runnerSpeedLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerSpeedPrices[Settings.User.rs.rSpeedLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerSpeedPrices[LocalDatas.Instance.runnerSpeedLevel];
-                        LocalDatas.Instance.runnerSpeedLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerSpeedLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerSpeedPrices[Settings.User.rs.rSpeedLevel];
+                        Settings.User.rs.rSpeedLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rSpeedLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[0]);
-                        FirebaseController.Instance.SaveData();
-
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -750,15 +748,15 @@ public class MenuUIController : MonoBehaviour
                 // If we are buying with diamond coins
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerSpeedPrices[LocalDatas.Instance.runnerSpeedLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerSpeedPrices[Settings.User.rs.rSpeedLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerSpeedPrices[LocalDatas.Instance.runnerSpeedLevel];
-                        LocalDatas.Instance.runnerSpeedLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerSpeedLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerSpeedPrices[Settings.User.rs.rSpeedLevel];
+                        Settings.User.rs.rSpeedLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rSpeedLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[0]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -774,21 +772,21 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "Shield")
         {
-            if (LocalDatas.Instance.runnerShieldLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2]) // if skill level is not max for this level
+            if (Settings.User.rs.rShieldLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerShieldLevel != SomeDatas.Instance.runnerShieldPrices.Length - 1)
+                if (Settings.User.rs.rShieldLevel != SomeDatas.Instance.runnerShieldPrices.Length - 1)
                 { 
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerShieldPrices[LocalDatas.Instance.runnerShieldLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerShieldPrices[Settings.User.rs.rShieldLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
 
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerShieldPrices[LocalDatas.Instance.runnerShieldLevel];
-                        LocalDatas.Instance.runnerShieldLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerShieldLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerShieldPrices[Settings.User.rs.rShieldLevel];
+                        Settings.User.rs.rShieldLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rShieldLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[1]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
 
                     }
                     else
@@ -798,15 +796,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerShieldPrices[LocalDatas.Instance.runnerShieldLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerShieldPrices[Settings.User.rs.rShieldLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerShieldPrices[LocalDatas.Instance.runnerShieldLevel];
-                        LocalDatas.Instance.runnerShieldLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerShieldLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerShieldPrices[Settings.User.rs.rShieldLevel];
+                        Settings.User.rs.rShieldLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rShieldLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[1]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -822,21 +820,21 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "Invisibility")
         {
-            if (LocalDatas.Instance.runnerInvisibilityLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4]) // if skill level is not max for this level
+            if (Settings.User.rs.rInvisibilityLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerInvisibilityLevel != SomeDatas.Instance.runnerInvisibilityPrices.Length - 1)
+                if (Settings.User.rs.rInvisibilityLevel != SomeDatas.Instance.runnerInvisibilityPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerInvisibilityPrices[LocalDatas.Instance.runnerInvisibilityLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerInvisibilityPrices[Settings.User.rs.rInvisibilityLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
 
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerInvisibilityPrices[LocalDatas.Instance.runnerInvisibilityLevel];
-                        LocalDatas.Instance.runnerInvisibilityLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerInvisibilityLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerInvisibilityPrices[Settings.User.rs.rInvisibilityLevel];
+                        Settings.User.rs.rInvisibilityLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rInvisibilityLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[2]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -845,15 +843,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerInvisibilityPrices[LocalDatas.Instance.runnerInvisibilityLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerInvisibilityPrices[Settings.User.rs.rInvisibilityLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerInvisibilityPrices[LocalDatas.Instance.runnerInvisibilityLevel];
-                        LocalDatas.Instance.runnerInvisibilityLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerInvisibilityLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerInvisibilityPrices[Settings.User.rs.rInvisibilityLevel];
+                        Settings.User.rs.rInvisibilityLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rInvisibilityLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[2]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -869,20 +867,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "Life")
         {
-            if (LocalDatas.Instance.runnerAddHealth < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1]) // if skill level is not max for this level
+            if (Settings.User.rs.rAddHealth < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerAddHealth != SomeDatas.Instance.runnerAddHealthPrices.Length - 1)
+                if (Settings.User.rs.rAddHealth != SomeDatas.Instance.runnerAddHealthPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth];
-                        LocalDatas.Instance.runnerAddHealth += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerAddHealth);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth];
+                        Settings.User.rs.rAddHealth += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rAddHealth);
                         SkillButtonPressedRunner(runnerSkillsButtons[3]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -891,15 +889,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth];
-                        LocalDatas.Instance.runnerAddHealth += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerAddHealth);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth];
+                        Settings.User.rs.rAddHealth += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rAddHealth);
                         SkillButtonPressedRunner(runnerSkillsButtons[3]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -915,20 +913,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "Trap")
         {
-            if (LocalDatas.Instance.runnerTrapLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3]) // if skill level is not max for this level
+            if (Settings.User.rs.rTrapLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerTrapLevel != SomeDatas.Instance.runnerTrapPrices.Length - 1)
+                if (Settings.User.rs.rTrapLevel != SomeDatas.Instance.runnerTrapPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerTrapPrices[LocalDatas.Instance.runnerTrapLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerTrapPrices[Settings.User.rs.rTrapLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerTrapPrices[LocalDatas.Instance.runnerTrapLevel];
-                        LocalDatas.Instance.runnerTrapLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerTrapLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerTrapPrices[Settings.User.rs.rTrapLevel];
+                        Settings.User.rs.rTrapLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rTrapLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[4]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -937,15 +935,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerTrapPrices[LocalDatas.Instance.runnerTrapLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerTrapPrices[Settings.User.rs.rTrapLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerTrapPrices[LocalDatas.Instance.runnerTrapLevel];
-                        LocalDatas.Instance.runnerTrapLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerTrapLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerTrapPrices[Settings.User.rs.rTrapLevel];
+                        Settings.User.rs.rTrapLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rTrapLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[4]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -961,20 +959,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "SlowDownTrap")
         {
-            if (LocalDatas.Instance.runnerSlowdownTrapLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5]) // if skill level is not max for this level
+            if (Settings.User.rs.rSDTLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerSlowdownTrapLevel != SomeDatas.Instance.runnerSTDPrices.Length - 1)
+                if (Settings.User.rs.rSDTLevel != SomeDatas.Instance.runnerSTDPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerSTDPrices[LocalDatas.Instance.runnerSlowdownTrapLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerSTDPrices[Settings.User.rs.rSDTLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerSTDPrices[LocalDatas.Instance.runnerSlowdownTrapLevel];
-                        LocalDatas.Instance.runnerSlowdownTrapLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerSlowdownTrapLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerSTDPrices[Settings.User.rs.rSDTLevel];
+                        Settings.User.rs.rSDTLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rSDTLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[5]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -983,15 +981,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerSTDPrices[LocalDatas.Instance.runnerSlowdownTrapLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerSTDPrices[Settings.User.rs.rSDTLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerSTDPrices[LocalDatas.Instance.runnerSlowdownTrapLevel];
-                        LocalDatas.Instance.runnerSlowdownTrapLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerSlowdownTrapLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerSTDPrices[Settings.User.rs.rSDTLevel];
+                        Settings.User.rs.rSDTLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rSDTLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[5]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1007,20 +1005,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "TopView")
         {
-            if (LocalDatas.Instance.runnerTopViewLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6]) // if skill level is not max for this level
+            if (Settings.User.rs.rTopViewLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerTopViewLevel != SomeDatas.Instance.runnerTopViewPrices.Length - 1)
+                if (Settings.User.rs.rTopViewLevel != SomeDatas.Instance.runnerTopViewPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerTopViewPrices[LocalDatas.Instance.runnerTopViewLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerTopViewPrices[Settings.User.rs.rTopViewLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerTopViewPrices[LocalDatas.Instance.runnerTopViewLevel];
-                        LocalDatas.Instance.runnerTopViewLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerTopViewLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerTopViewPrices[Settings.User.rs.rTopViewLevel];
+                        Settings.User.rs.rTopViewLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rTopViewLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[6]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1029,15 +1027,16 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerTopViewPrices[LocalDatas.Instance.runnerTopViewLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerTopViewPrices[Settings.User.rs.rTopViewLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerTopViewPrices[LocalDatas.Instance.runnerTopViewLevel];
-                        LocalDatas.Instance.runnerTopViewLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerTopViewLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerTopViewPrices[Settings.User.rs.rTopViewLevel];
+                        Settings.User.rs.rTopViewLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rTopViewLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[6]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
+                        
                     }
                     else
                     {
@@ -1053,20 +1052,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "Wall")
         {
-            if (LocalDatas.Instance.runnerWallLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7]) // if skill level is not max for this level
+            if (Settings.User.rs.rWallLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerWallLevel != SomeDatas.Instance.runnerWallPrices.Length - 1)
+                if (Settings.User.rs.rWallLevel != SomeDatas.Instance.runnerWallPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerWallPrices[LocalDatas.Instance.runnerWallLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerWallPrices[Settings.User.rs.rWallLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerWallPrices[LocalDatas.Instance.runnerWallLevel];
-                        LocalDatas.Instance.runnerWallLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerWallLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerWallPrices[Settings.User.rs.rWallLevel];
+                        Settings.User.rs.rWallLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rWallLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[7]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1075,15 +1074,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerWallPrices[LocalDatas.Instance.runnerWallLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerWallPrices[Settings.User.rs.rWallLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerWallPrices[LocalDatas.Instance.runnerWallLevel];
-                        LocalDatas.Instance.runnerWallLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerWallLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerWallPrices[Settings.User.rs.rWallLevel];
+                        Settings.User.rs.rWallLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rWallLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[7]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1099,20 +1098,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "Hook")
         {
-            if (LocalDatas.Instance.runnerHookLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8]) // if skill level is not max for this level
+            if (Settings.User.rs.rHookLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerHookLevel != SomeDatas.Instance.runnerHookPrices.Length - 1)
+                if (Settings.User.rs.rHookLevel != SomeDatas.Instance.runnerHookPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerHookPrices[LocalDatas.Instance.runnerHookLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerHookPrices[Settings.User.rs.rHookLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerHookPrices[LocalDatas.Instance.runnerHookLevel];
-                        LocalDatas.Instance.runnerHookLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerHookLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerHookPrices[Settings.User.rs.rHookLevel];
+                        Settings.User.rs.rHookLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rHookLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[8]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1121,15 +1120,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerHookPrices[LocalDatas.Instance.runnerHookLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerHookPrices[Settings.User.rs.rHookLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerHookPrices[LocalDatas.Instance.runnerHookLevel];
-                        LocalDatas.Instance.runnerHookLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerHookLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerHookPrices[Settings.User.rs.rHookLevel];
+                        Settings.User.rs.rHookLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rHookLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[8]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1145,20 +1144,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentRunnerSkillPressed == "Bot Clone")
         {
-            if (LocalDatas.Instance.runnerBCLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9]) // if skill level is not max for this level
+            if (Settings.User.rs.rBCLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9]) // if skill level is not max for this level
             {
                 improveRunnerButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.runnerBCLevel != SomeDatas.Instance.runnerBCPrices.Length - 1)
+                if (Settings.User.rs.rBCLevel != SomeDatas.Instance.runnerBCPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.runnerBCPrices[LocalDatas.Instance.runnerBCLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.runnerBCPrices[Settings.User.rs.rBCLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.runnerBCPrices[LocalDatas.Instance.runnerBCLevel];
-                        LocalDatas.Instance.runnerBCLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerBCLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.runnerBCPrices[Settings.User.rs.rBCLevel];
+                        Settings.User.rs.rBCLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rBCLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[9]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1167,15 +1166,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.runnerBCPrices[LocalDatas.Instance.runnerBCLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.runnerBCPrices[Settings.User.rs.rBCLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.runnerBCPrices[LocalDatas.Instance.runnerBCLevel];
-                        LocalDatas.Instance.runnerBCLevel += 1;
-                        SetRunnerSkillLevels(LocalDatas.Instance.runnerBCLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.runnerBCPrices[Settings.User.rs.rBCLevel];
+                        Settings.User.rs.rBCLevel += 1;
+                        SetRunnerSkillLevels(Settings.User.rs.rBCLevel);
                         SkillButtonPressedRunner(runnerSkillsButtons[9]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1195,20 +1194,20 @@ public class MenuUIController : MonoBehaviour
     {
         if (currentCatcherSkillPressed == "Sprint")
         {
-            if (LocalDatas.Instance.catcherSpeedLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0]) // if skill level is not max for this level
+            if (Settings.User.cs.cSpeedLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherSpeedLevel != SomeDatas.Instance.catcherSpeedPrices.Length - 1)
+                if (Settings.User.cs.cSpeedLevel != SomeDatas.Instance.catcherSpeedPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherSpeedPrices[LocalDatas.Instance.catcherSpeedLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherSpeedPrices[Settings.User.cs.cSpeedLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherSpeedPrices[LocalDatas.Instance.catcherSpeedLevel];
-                        LocalDatas.Instance.catcherSpeedLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherSpeedLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherSpeedPrices[Settings.User.cs.cSpeedLevel];
+                        Settings.User.cs.cSpeedLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cSpeedLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[0]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1217,15 +1216,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherSpeedPrices[LocalDatas.Instance.catcherSpeedLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherSpeedPrices[Settings.User.cs.cSpeedLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherSpeedPrices[LocalDatas.Instance.catcherSpeedLevel];
-                        LocalDatas.Instance.catcherSpeedLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherSpeedLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherSpeedPrices[Settings.User.cs.cSpeedLevel];
+                        Settings.User.cs.cSpeedLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cSpeedLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[0]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1241,20 +1240,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "Shield")
         {
-            if (LocalDatas.Instance.catcherShieldLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1]) // if skill level is not max for this level
+            if (Settings.User.cs.cShieldLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherShieldLevel != SomeDatas.Instance.catcherShieldPrices.Length - 1)
+                if (Settings.User.cs.cShieldLevel != SomeDatas.Instance.catcherShieldPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherShieldPrices[LocalDatas.Instance.catcherShieldLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherShieldPrices[Settings.User.cs.cShieldLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherShieldPrices[LocalDatas.Instance.catcherShieldLevel];
-                        LocalDatas.Instance.catcherShieldLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherShieldLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherShieldPrices[Settings.User.cs.cShieldLevel];
+                        Settings.User.cs.cShieldLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cShieldLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[1]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1263,15 +1262,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherShieldPrices[LocalDatas.Instance.catcherShieldLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherShieldPrices[Settings.User.cs.cShieldLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherShieldPrices[LocalDatas.Instance.catcherShieldLevel];
-                        LocalDatas.Instance.catcherShieldLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherShieldLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherShieldPrices[Settings.User.cs.cShieldLevel];
+                        Settings.User.cs.cShieldLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cShieldLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[1]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1288,20 +1287,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "Invisibility")
         {
-            if (LocalDatas.Instance.catcherInvisibilityLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2]) // if skill level is not max for this level
+            if (Settings.User.cs.cInvisibilityLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherInvisibilityLevel != SomeDatas.Instance.catcherInvisibilityPrices.Length - 1)
+                if (Settings.User.cs.cInvisibilityLevel != SomeDatas.Instance.catcherInvisibilityPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherInvisibilityPrices[LocalDatas.Instance.catcherInvisibilityLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherInvisibilityPrices[Settings.User.cs.cInvisibilityLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherInvisibilityPrices[LocalDatas.Instance.catcherInvisibilityLevel];
-                        LocalDatas.Instance.catcherInvisibilityLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherInvisibilityLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherInvisibilityPrices[Settings.User.cs.cInvisibilityLevel];
+                        Settings.User.cs.cInvisibilityLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cInvisibilityLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[2]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1310,15 +1309,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherInvisibilityPrices[LocalDatas.Instance.catcherInvisibilityLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherInvisibilityPrices[Settings.User.cs.cInvisibilityLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherInvisibilityPrices[LocalDatas.Instance.catcherInvisibilityLevel];
-                        LocalDatas.Instance.catcherInvisibilityLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherInvisibilityLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherInvisibilityPrices[Settings.User.cs.cInvisibilityLevel];
+                        Settings.User.cs.cInvisibilityLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cInvisibilityLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[2]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1334,20 +1333,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "ExtraBall")
         {
-            if (LocalDatas.Instance.catcherBallLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3]) // if skill level is not max for this level
+            if (Settings.User.cs.cBallLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherBallLevel != SomeDatas.Instance.catcherBallPrices.Length - 1)
+                if (Settings.User.cs.cBallLevel != SomeDatas.Instance.catcherBallPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherBallPrices[LocalDatas.Instance.catcherBallLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherBallPrices[Settings.User.cs.cBallLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherBallPrices[LocalDatas.Instance.catcherBallLevel];
-                        LocalDatas.Instance.catcherBallLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherBallLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherBallPrices[Settings.User.cs.cBallLevel];
+                        Settings.User.cs.cBallLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cBallLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[3]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1356,15 +1355,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherBallPrices[LocalDatas.Instance.catcherBallLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherBallPrices[Settings.User.cs.cBallLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherBallPrices[LocalDatas.Instance.catcherBallLevel];
-                        LocalDatas.Instance.catcherBallLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherBallLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherBallPrices[Settings.User.cs.cBallLevel];
+                        Settings.User.cs.cBallLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cBallLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[3]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1380,20 +1379,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "SlowDownTrap")
         {
-            if (LocalDatas.Instance.catcherSlowdownTrapLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4]) // if skill level is not max for this level
+            if (Settings.User.cs.cSDTlevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherSlowdownTrapLevel != SomeDatas.Instance.catcherSTDPrices.Length - 1)
+                if (Settings.User.cs.cSDTlevel != SomeDatas.Instance.catcherSTDPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherSTDPrices[LocalDatas.Instance.catcherSlowdownTrapLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherSTDPrices[Settings.User.cs.cSDTlevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherSTDPrices[LocalDatas.Instance.catcherSlowdownTrapLevel];
-                        LocalDatas.Instance.catcherSlowdownTrapLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherSlowdownTrapLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherSTDPrices[Settings.User.cs.cSDTlevel];
+                        Settings.User.cs.cSDTlevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cSDTlevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[4]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1402,15 +1401,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherSTDPrices[LocalDatas.Instance.catcherSlowdownTrapLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherSTDPrices[Settings.User.cs.cSDTlevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherSTDPrices[LocalDatas.Instance.catcherSlowdownTrapLevel];
-                        LocalDatas.Instance.catcherSlowdownTrapLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherSlowdownTrapLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherSTDPrices[Settings.User.cs.cSDTlevel];
+                        Settings.User.cs.cSDTlevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cSDTlevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[4]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1426,20 +1425,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "TopView")
         {
-            if (LocalDatas.Instance.catcherTopViewLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5]) // if skill level is not max for this level
+            if (Settings.User.cs.cTopViewLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherTopViewLevel != SomeDatas.Instance.catcherTopViewPrices.Length - 1)
+                if (Settings.User.cs.cTopViewLevel != SomeDatas.Instance.catcherTopViewPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherTopViewPrices[LocalDatas.Instance.catcherTopViewLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherTopViewPrices[Settings.User.cs.cTopViewLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherTopViewPrices[LocalDatas.Instance.catcherTopViewLevel];
-                        LocalDatas.Instance.catcherTopViewLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherTopViewLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherTopViewPrices[Settings.User.cs.cTopViewLevel];
+                        Settings.User.cs.cTopViewLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cTopViewLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[5]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1448,15 +1447,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherTopViewPrices[LocalDatas.Instance.catcherTopViewLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherTopViewPrices[Settings.User.cs.cTopViewLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherTopViewPrices[LocalDatas.Instance.catcherTopViewLevel];
-                        LocalDatas.Instance.catcherTopViewLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherTopViewLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherTopViewPrices[Settings.User.cs.cTopViewLevel];
+                        Settings.User.cs.cTopViewLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cTopViewLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[5]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1472,20 +1471,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "Wall")
         {
-            if (LocalDatas.Instance.catcherWallLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6]) // if skill level is not max for this level
+            if (Settings.User.cs.cWallLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherWallLevel != SomeDatas.Instance.catcherWallPrices.Length - 1)
+                if (Settings.User.cs.cWallLevel != SomeDatas.Instance.catcherWallPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherWallPrices[LocalDatas.Instance.catcherWallLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherWallPrices[Settings.User.cs.cWallLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherWallPrices[LocalDatas.Instance.catcherWallLevel];
-                        LocalDatas.Instance.catcherWallLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherWallLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherWallPrices[Settings.User.cs.cWallLevel];
+                        Settings.User.cs.cWallLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cWallLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[6]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1494,15 +1493,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherWallPrices[LocalDatas.Instance.catcherWallLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherWallPrices[Settings.User.cs.cWallLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherWallPrices[LocalDatas.Instance.catcherWallLevel];
-                        LocalDatas.Instance.catcherWallLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherWallLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherWallPrices[Settings.User.cs.cWallLevel];
+                        Settings.User.cs.cWallLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cWallLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[6]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1518,20 +1517,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "Hook")
         {
-            if (LocalDatas.Instance.catcherHookLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7]) // if skill level is not max for this level
+            if (Settings.User.cs.cHookLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherHookLevel != SomeDatas.Instance.catcherHookPrices.Length - 1)
+                if (Settings.User.cs.cHookLevel != SomeDatas.Instance.catcherHookPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherHookPrices[LocalDatas.Instance.catcherHookLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherHookPrices[Settings.User.cs.cHookLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherHookPrices[LocalDatas.Instance.catcherHookLevel];
-                        LocalDatas.Instance.catcherHookLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherHookLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherHookPrices[Settings.User.cs.cHookLevel];
+                        Settings.User.cs.cHookLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cHookLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[7]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1540,15 +1539,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherHookPrices[LocalDatas.Instance.catcherHookLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherHookPrices[Settings.User.cs.cHookLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherHookPrices[LocalDatas.Instance.catcherHookLevel];
-                        LocalDatas.Instance.catcherHookLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherHookLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherHookPrices[Settings.User.cs.cHookLevel];
+                        Settings.User.cs.cHookLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cHookLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[7]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1564,20 +1563,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "Deadly Hit")
         {
-            if (LocalDatas.Instance.catcherDeadlyHitLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8]) // if skill level is not max for this level
+            if (Settings.User.cs.cDHLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherDeadlyHitLevel != SomeDatas.Instance.catcherDHPrices.Length - 1)
+                if (Settings.User.cs.cDHLevel != SomeDatas.Instance.catcherDHPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherDHPrices[LocalDatas.Instance.catcherDeadlyHitLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherDHPrices[Settings.User.cs.cDHLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherDHPrices[LocalDatas.Instance.catcherDeadlyHitLevel];
-                        LocalDatas.Instance.catcherDeadlyHitLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherDeadlyHitLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherDHPrices[Settings.User.cs.cDHLevel];
+                        Settings.User.cs.cDHLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cDHLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[8]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1586,15 +1585,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherDHPrices[LocalDatas.Instance.catcherDeadlyHitLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherDHPrices[Settings.User.cs.cDHLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherDHPrices[LocalDatas.Instance.catcherDeadlyHitLevel];
-                        LocalDatas.Instance.catcherDeadlyHitLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherDeadlyHitLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherDHPrices[Settings.User.cs.cDHLevel];
+                        Settings.User.cs.cDHLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cDHLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[8]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1610,20 +1609,20 @@ public class MenuUIController : MonoBehaviour
         }
         else if (currentCatcherSkillPressed == "Bot Clone")
         {
-            if (LocalDatas.Instance.catcherBCLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9]) // if skill level is not max for this level
+            if (Settings.User.cs.cBCLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9]) // if skill level is not max for this level
             {
                 improveCatcherButton.GetComponent<Button>().interactable = true;
-                if (LocalDatas.Instance.catcherBCLevel != SomeDatas.Instance.catcherBCPrices.Length - 1)
+                if (Settings.User.cs.cBCLevel != SomeDatas.Instance.catcherBCPrices.Length - 1)
                 {
-                    if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.catcherBCPrices[LocalDatas.Instance.catcherBCLevel])
+                    if (Settings.User.ssCoin >= SomeDatas.Instance.catcherBCPrices[Settings.User.cs.cBCLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.ssCoin -= SomeDatas.Instance.catcherBCPrices[LocalDatas.Instance.catcherBCLevel];
-                        LocalDatas.Instance.catcherBCLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherBCLevel);
+                        Settings.User.ssCoin -= SomeDatas.Instance.catcherBCPrices[Settings.User.cs.cBCLevel];
+                        Settings.User.cs.cBCLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cBCLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[9]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1632,15 +1631,15 @@ public class MenuUIController : MonoBehaviour
                 }
                 else
                 {
-                    if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.catcherBCPrices[LocalDatas.Instance.catcherBCLevel])
+                    if (Settings.User.starCoin >= SomeDatas.Instance.catcherBCPrices[Settings.User.cs.cBCLevel])
                     {
                         // Improving
                         AudioManager.Instance.Play(3);
-                        LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.catcherBCPrices[LocalDatas.Instance.catcherBCLevel];
-                        LocalDatas.Instance.catcherBCLevel += 1;
-                        SetCatcherSkillLevels(LocalDatas.Instance.catcherBCLevel);
+                        Settings.User.starCoin -= SomeDatas.Instance.catcherBCPrices[Settings.User.cs.cBCLevel];
+                        Settings.User.cs.cBCLevel += 1;
+                        SetCatcherSkillLevels(Settings.User.cs.cBCLevel);
                         SkillButtonPressedCatcher(catcherSkillsButtons[9]);
-                        FirebaseController.Instance.SaveData();
+                        SaveLoadManager.Save(Settings.User);
                     }
                     else
                     {
@@ -1762,19 +1761,19 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[0];
             currentRunnerSkillPressed = "Sprint";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerSpeedLevel);
+            SetRunnerSkillLevels(Settings.User.rs.rSpeedLevel);
 
-            if (LocalDatas.Instance.runnerSpeedLevel == SomeDatas.Instance.runnerSpeedPrices.Length - 1) // 10 level
+            if (Settings.User.rs.rSpeedLevel == SomeDatas.Instance.runnerSpeedPrices.Length - 1) // 10 level
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
 
             }
-            else if (LocalDatas.Instance.runnerSpeedLevel <= SomeDatas.Instance.runnerSpeedPrices.Length - 1) // 0 - 9 level
+            else if (Settings.User.rs.rSpeedLevel <= SomeDatas.Instance.runnerSpeedPrices.Length - 1) // 0 - 9 level
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
 
             }
-            else if (LocalDatas.Instance.runnerSpeedLevel >= SomeDatas.Instance.runnerSpeedPrices.Length) // 11 level
+            else if (Settings.User.rs.rSpeedLevel >= SomeDatas.Instance.runnerSpeedPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -1784,15 +1783,15 @@ public class MenuUIController : MonoBehaviour
             }
 
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] != 0 && LocalDatas.Instance.runnerSpeedLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0]) // Sprint is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] != 0 && Settings.User.rs.rSpeedLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0]) // Sprint is opened
             {
                 runnerSkillInfoText.text = "Sprint is the ability to move temporarily quickly around the map. It takes 30 seconds to regenerate the Sprint ability. Sprint effect time depends on the level of the ability. There are total of 11 levels.";
-                if (LocalDatas.Instance.runnerSpeedLevel < SomeDatas.Instance.runnerSpeedPrices.Length)
+                if (Settings.User.rs.rSpeedLevel < SomeDatas.Instance.runnerSpeedPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerSpeedPrices[LocalDatas.Instance.runnerSpeedLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerSpeedPrices[Settings.User.rs.rSpeedLevel].ToString("n0");
                 }
                 else
                 {
@@ -1801,7 +1800,7 @@ public class MenuUIController : MonoBehaviour
                 }
 
             }
-            else if (LocalDatas.Instance.runnerSpeedLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rSpeedLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] != 0) // if skill level is not max for this level
             {
 
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(0, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -1809,7 +1808,7 @@ public class MenuUIController : MonoBehaviour
             }
             else // Sprint skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerSpeedPrices[LocalDatas.Instance.runnerSpeedLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerSpeedPrices[Settings.User.rs.rSpeedLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
                 runnerSkillInfoText.text = "The skill is not active. Required activation level - " + WhenRunnerSkillWillOpen(0, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
@@ -1819,16 +1818,16 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[2];
             currentRunnerSkillPressed = "Shield";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerShieldLevel);
-            if (LocalDatas.Instance.runnerShieldLevel == SomeDatas.Instance.runnerShieldPrices.Length - 1) // 10 lvl
+            SetRunnerSkillLevels(Settings.User.rs.rShieldLevel);
+            if (Settings.User.rs.rShieldLevel == SomeDatas.Instance.runnerShieldPrices.Length - 1) // 10 lvl
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            if (LocalDatas.Instance.runnerShieldLevel < SomeDatas.Instance.runnerShieldPrices.Length - 1) // 0-9 level
+            if (Settings.User.rs.rShieldLevel < SomeDatas.Instance.runnerShieldPrices.Length - 1) // 0-9 level
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerShieldLevel >= SomeDatas.Instance.runnerShieldPrices.Length) // 11 level
+            else if (Settings.User.rs.rShieldLevel >= SomeDatas.Instance.runnerShieldPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -1836,16 +1835,16 @@ public class MenuUIController : MonoBehaviour
                 runnerSkillInfoText.text = "SHIELD Shields the Hero(character) for certain seconds depending on level of the ability. It takes 30 seconds to regenerate the Shield ability. There are total of 11 levels.";
                 return;
             }
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerShieldPrices[LocalDatas.Instance.runnerShieldLevel].ToString("n0");
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] != 0 && LocalDatas.Instance.runnerShieldLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2]) // Shield is opened
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerShieldPrices[Settings.User.rs.rShieldLevel].ToString("n0");
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] != 0 && Settings.User.rs.rShieldLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2]) // Shield is opened
             {
                 runnerSkillInfoText.text = "SHIELD Shields the Hero(character) for certain seconds depending on level of the ability. It takes 30 seconds to regenerate the Shield ability. There are total of 11 levels.";
-                if (LocalDatas.Instance.runnerShieldLevel < SomeDatas.Instance.runnerShieldPrices.Length)
+                if (Settings.User.rs.rShieldLevel < SomeDatas.Instance.runnerShieldPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerShieldPrices[LocalDatas.Instance.runnerShieldLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerShieldPrices[Settings.User.rs.rShieldLevel].ToString("n0");
                 }
                 else
                 {
@@ -1854,14 +1853,14 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerShieldLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rShieldLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] != 0) // if skill level is not max for this level
             {
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(2, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
             }
             else // shield skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerShieldPrices[LocalDatas.Instance.runnerShieldLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerShieldPrices[Settings.User.rs.rShieldLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
 
                 runnerSkillInfoText.text = "The skill is not active. Required activation level - " + WhenRunnerSkillWillOpen(2, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -1873,16 +1872,16 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[4];
             currentRunnerSkillPressed = "Invisibility";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerInvisibilityLevel);
-            if (LocalDatas.Instance.runnerInvisibilityLevel == SomeDatas.Instance.runnerInvisibilityPrices.Length - 1) // 10 lvl
+            SetRunnerSkillLevels(Settings.User.rs.rInvisibilityLevel);
+            if (Settings.User.rs.rInvisibilityLevel == SomeDatas.Instance.runnerInvisibilityPrices.Length - 1) // 10 lvl
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.runnerInvisibilityLevel < SomeDatas.Instance.runnerInvisibilityPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.rs.rInvisibilityLevel < SomeDatas.Instance.runnerInvisibilityPrices.Length - 1) // 0-9 lvl
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerInvisibilityLevel >= SomeDatas.Instance.runnerInvisibilityPrices.Length) // 11 level
+            else if (Settings.User.rs.rInvisibilityLevel >= SomeDatas.Instance.runnerInvisibilityPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -1891,21 +1890,21 @@ public class MenuUIController : MonoBehaviour
                 return;
             }
 
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerInvisibilityPrices[LocalDatas.Instance.runnerInvisibilityLevel].ToString("n0");
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerInvisibilityPrices[Settings.User.rs.rInvisibilityLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] != 0 && LocalDatas.Instance.runnerInvisibilityLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4]) // Invisibility is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] != 0 && Settings.User.rs.rInvisibilityLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4]) // Invisibility is opened
             {
 
                 runnerSkillInfoText.text = "Invisibility is the phenomenon of becoming invisible to the eye. It takes 30 seconds to regenerate the Invisibility ability. Invisibility effect time depends on the level of the ability. There are total of 11 levels.";
                 //runnerSkillsPrices = Skill.Instance.runnerInvisibility.Split('|');
                 //LocalDatas.Instance.Debug("\nrunnerSkillsPrices[0]" + runnerSkillsPrices[0]);
-                if (LocalDatas.Instance.runnerInvisibilityLevel < SomeDatas.Instance.runnerInvisibilityPrices.Length)
+                if (Settings.User.rs.rInvisibilityLevel < SomeDatas.Instance.runnerInvisibilityPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
 
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerInvisibilityPrices[LocalDatas.Instance.runnerInvisibilityLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerInvisibilityPrices[Settings.User.rs.rInvisibilityLevel].ToString("n0");
                 }
                 else
                 {
@@ -1914,14 +1913,14 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerInvisibilityLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rInvisibilityLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] != 0) // if skill level is not max for this level
             {
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(4, LocalDatas.Instance.currentLevelIntervalIndex); ;
                 improveRunnerButton.GetComponent<Button>().interactable = false;
             }
             else // Invisibility skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerInvisibilityPrices[LocalDatas.Instance.runnerInvisibilityLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerInvisibilityPrices[Settings.User.rs.rInvisibilityLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
 
                 runnerSkillInfoText.text = "The skill is not active. Required activation level - " + WhenRunnerSkillWillOpen(4, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -1934,16 +1933,16 @@ public class MenuUIController : MonoBehaviour
             SetNumberOfBlackSquaresInRunnerSkillRightPanel(2);
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[1];
             currentRunnerSkillPressed = "Life";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerAddHealth);
-            if (LocalDatas.Instance.runnerAddHealth == SomeDatas.Instance.runnerAddHealthPrices.Length - 1) // 10 lvl
+            SetRunnerSkillLevels(Settings.User.rs.rAddHealth);
+            if (Settings.User.rs.rAddHealth == SomeDatas.Instance.runnerAddHealthPrices.Length - 1) // 10 lvl
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.runnerAddHealth < SomeDatas.Instance.runnerAddHealthPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.rs.rAddHealth < SomeDatas.Instance.runnerAddHealthPrices.Length - 1) // 0-9 lvl
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerAddHealth >= SomeDatas.Instance.runnerAddHealthPrices.Length) // 11 level
+            else if (Settings.User.rs.rAddHealth >= SomeDatas.Instance.runnerAddHealthPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -1952,21 +1951,21 @@ public class MenuUIController : MonoBehaviour
                 return;
             }
 
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString("n0");
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString("n0");
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] != 0 && LocalDatas.Instance.runnerAddHealth < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1]) // Life is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] != 0 && Settings.User.rs.rAddHealth < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1]) // Life is opened
             {
                 //runnerSkillsPrices = Skill.Instance.runnerAddHealth.Split('|');
                 runnerSkillInfoText.text = "The \"Health\" ability adds additional health, which is selected before entering the game. There are only 3 levels, so depending on the level health is added.";
                 //LocalDatas.Instance.Debug("\nrunnerSkillsPrices[0]" + runnerSkillsPrices[0]);
 
-                if (LocalDatas.Instance.runnerAddHealth < SomeDatas.Instance.runnerAddHealthPrices.Length)
+                if (Settings.User.rs.rAddHealth < SomeDatas.Instance.runnerAddHealthPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
 
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString("n0");
                 }
                 else
                 {
@@ -1975,14 +1974,14 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerAddHealth >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rAddHealth >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] != 0) // if skill level is not max for this level
             {
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(1, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
             }
             else // Life skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
                 runnerSkillInfoText.text = "The skill is not active. Required activation level - " + WhenRunnerSkillWillOpen(1, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
@@ -1992,16 +1991,16 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[3];
             currentRunnerSkillPressed = "Trap";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerTrapLevel);
-            if (LocalDatas.Instance.runnerTrapLevel == SomeDatas.Instance.runnerTrapPrices.Length - 1) // 10 lvl
+            SetRunnerSkillLevels(Settings.User.rs.rTrapLevel);
+            if (Settings.User.rs.rTrapLevel == SomeDatas.Instance.runnerTrapPrices.Length - 1) // 10 lvl
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.runnerTrapLevel < SomeDatas.Instance.runnerTrapPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.rs.rTrapLevel < SomeDatas.Instance.runnerTrapPrices.Length - 1) // 0-9 lvl
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerTrapLevel >= SomeDatas.Instance.runnerTrapPrices.Length) // 11 level
+            else if (Settings.User.rs.rTrapLevel >= SomeDatas.Instance.runnerTrapPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -2009,23 +2008,23 @@ public class MenuUIController : MonoBehaviour
                 runnerSkillInfoText.text = "TRAP Character throws a trap under himself, immobilizing the affected enemies for a certain amount of time. It takes 30 seconds to regenerate the Trap ability. There are total of 11 levels.";
                 return;
             }
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerTrapPrices[LocalDatas.Instance.runnerTrapLevel].ToString("n0");
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerTrapPrices[Settings.User.rs.rTrapLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] != 0 && LocalDatas.Instance.runnerTrapLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3]) // Trap is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] != 0 && Settings.User.rs.rTrapLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3]) // Trap is opened
             {
                 //runnerSkillsPrices = Skill.Instance.runnerTrap.Split('|');
                 runnerSkillInfoText.text = "TRAP Character throws a trap under himself, immobilizing the affected enemies for a certain amount of time. It takes 30 seconds to regenerate the Trap ability. There are total of 11 levels.";
                 //LocalDatas.Instance.Debug("\nrunnerSkillsPrices[0]" + runnerSkillsPrices[0]);
                 //TODO length of array ..
-                if (LocalDatas.Instance.runnerTrapLevel < SomeDatas.Instance.runnerTrapPrices.Length)
+                if (Settings.User.rs.rTrapLevel < SomeDatas.Instance.runnerTrapPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
 
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerTrapPrices[LocalDatas.Instance.runnerTrapLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerTrapPrices[Settings.User.rs.rTrapLevel].ToString("n0");
 
-                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString();
+                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString();
                 }
                 else
                 {
@@ -2033,14 +2032,14 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerTrapLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rTrapLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] != 0) // if skill level is not max for this level
             {
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(3, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
             }
             else // Trap skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerTrapPrices[LocalDatas.Instance.runnerTrapLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerTrapPrices[Settings.User.rs.rTrapLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
 
                 runnerSkillInfoText.text = "The skill is not active. Required activation level - " + WhenRunnerSkillWillOpen(3, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2051,16 +2050,16 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[3];
             currentRunnerSkillPressed = "SlowDownTrap";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerSlowdownTrapLevel);
-            if (LocalDatas.Instance.runnerSlowdownTrapLevel == SomeDatas.Instance.runnerSTDPrices.Length - 1) // 10 lvl
+            SetRunnerSkillLevels(Settings.User.rs.rSDTLevel);
+            if (Settings.User.rs.rSDTLevel == SomeDatas.Instance.runnerSTDPrices.Length - 1) // 10 lvl
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.runnerSlowdownTrapLevel < SomeDatas.Instance.runnerSTDPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.rs.rSDTLevel < SomeDatas.Instance.runnerSTDPrices.Length - 1) // 0-9 lvl
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerSlowdownTrapLevel >= SomeDatas.Instance.runnerSTDPrices.Length) // 11 level
+            else if (Settings.User.rs.rSDTLevel >= SomeDatas.Instance.runnerSTDPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -2068,23 +2067,23 @@ public class MenuUIController : MonoBehaviour
                 runnerSkillInfoText.text = "Slowing Down Trap - the ability to throw a circular field in a certain direction in order to slow down opponents for a defined amount of time within the range of the field. It takes 30 seconds to regenerate the Slowing Down Trap. Slowing Down Trap effect time depends on the level of the ability.";
                 return;
             }
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerSTDPrices[LocalDatas.Instance.runnerSlowdownTrapLevel].ToString("n0");
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerSTDPrices[Settings.User.rs.rSDTLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] != 0 && LocalDatas.Instance.runnerSlowdownTrapLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5]) // Trap is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] != 0 && Settings.User.rs.rSDTLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5]) // Trap is opened
             {
                 //runnerSkillsPrices = Skill.Instance.runnerTrap.Split('|');
                 runnerSkillInfoText.text = "Slowing Down Trap - the ability to throw a circular field in a certain direction in order to slow down opponents for a defined amount of time within the range of the field. It takes 30 seconds to regenerate the Slowing Down Trap. Slowing Down Trap effect time depends on the level of the ability.";
                 //LocalDatas.Instance.Debug("\nrunnerSkillsPrices[0]" + runnerSkillsPrices[0]);
                 //TODO length of array ..
-                if (LocalDatas.Instance.runnerSlowdownTrapLevel < SomeDatas.Instance.runnerSTDPrices.Length)
+                if (Settings.User.rs.rSDTLevel < SomeDatas.Instance.runnerSTDPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
 
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerSTDPrices[LocalDatas.Instance.runnerSlowdownTrapLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerSTDPrices[Settings.User.rs.rSDTLevel].ToString("n0");
 
-                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString();
+                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString();
                 }
                 else
                 {
@@ -2092,14 +2091,14 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerSlowdownTrapLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rSDTLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] != 0) // if skill level is not max for this level
             {
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(5, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
             }
             else // Trap skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerSTDPrices[LocalDatas.Instance.runnerSlowdownTrapLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerSTDPrices[Settings.User.rs.rSDTLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
 
                 runnerSkillInfoText.text = "The skill is not active. Required activation level - " + WhenRunnerSkillWillOpen(5, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2110,16 +2109,16 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[3];
             currentRunnerSkillPressed = "TopView";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerTopViewLevel);
-            if (LocalDatas.Instance.runnerTopViewLevel == SomeDatas.Instance.runnerTopViewPrices.Length - 1) // 10 lvl
+            SetRunnerSkillLevels(Settings.User.rs.rTopViewLevel);
+            if (Settings.User.rs.rTopViewLevel == SomeDatas.Instance.runnerTopViewPrices.Length - 1) // 10 lvl
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.runnerTopViewLevel < SomeDatas.Instance.runnerTopViewPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.rs.rTopViewLevel < SomeDatas.Instance.runnerTopViewPrices.Length - 1) // 0-9 lvl
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerTopViewLevel >= SomeDatas.Instance.runnerTopViewPrices.Length) // 11 level
+            else if (Settings.User.rs.rTopViewLevel >= SomeDatas.Instance.runnerTopViewPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -2127,23 +2126,23 @@ public class MenuUIController : MonoBehaviour
                 runnerSkillInfoText.text = "Top View - the ability gives you the view of the arena from above. All opponents and their actions will be visible at a certain time. It takes 30 seconds to regenerate the Top View ability. Top View effect time depends on the level of the ability.";
                 return;
             }
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerTopViewPrices[LocalDatas.Instance.runnerTopViewLevel].ToString("n0");
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerTopViewPrices[Settings.User.rs.rTopViewLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] != 0 && LocalDatas.Instance.runnerTopViewLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6]) // TopView is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] != 0 && Settings.User.rs.rTopViewLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6]) // TopView is opened
             {
                 //runnerSkillsPrices = Skill.Instance.runnerTrap.Split('|');
                 runnerSkillInfoText.text = "Top View - the ability gives you the view of the arena from above. All opponents and their actions will be visible at a certain time. It takes 30 seconds to regenerate the Top View ability. Top View effect time depends on the level of the ability.";
                 //LocalDatas.Instance.Debug("\nrunnerSkillsPrices[0]" + runnerSkillsPrices[0]);
                 //TODO length of array ..
-                if (LocalDatas.Instance.runnerTopViewLevel < SomeDatas.Instance.runnerTopViewPrices.Length)
+                if (Settings.User.rs.rTopViewLevel < SomeDatas.Instance.runnerTopViewPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
 
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerTopViewPrices[LocalDatas.Instance.runnerTopViewLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerTopViewPrices[Settings.User.rs.rTopViewLevel].ToString("n0");
 
-                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString();
+                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString();
                 }
                 else
                 {
@@ -2151,14 +2150,14 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerTopViewLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rTopViewLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] != 0) // if skill level is not max for this level
             {
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(6, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
             }
             else // Trap skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerTopViewPrices[LocalDatas.Instance.runnerTopViewLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerTopViewPrices[Settings.User.rs.rTopViewLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
 
                 runnerSkillInfoText.text = "The skill is not active. Required activation level -" + WhenRunnerSkillWillOpen(6, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2169,16 +2168,16 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[3];
             currentRunnerSkillPressed = "Wall";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerWallLevel);
-            if (LocalDatas.Instance.runnerWallLevel == SomeDatas.Instance.runnerWallPrices.Length - 1)// 10 level
+            SetRunnerSkillLevels(Settings.User.rs.rWallLevel);
+            if (Settings.User.rs.rWallLevel == SomeDatas.Instance.runnerWallPrices.Length - 1)// 10 level
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.runnerWallLevel < SomeDatas.Instance.runnerWallPrices.Length - 1)// 0-9 level
+            else if (Settings.User.rs.rWallLevel < SomeDatas.Instance.runnerWallPrices.Length - 1)// 0-9 level
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerWallLevel >= SomeDatas.Instance.runnerWallPrices.Length) // 11 level
+            else if (Settings.User.rs.rWallLevel >= SomeDatas.Instance.runnerWallPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -2186,23 +2185,23 @@ public class MenuUIController : MonoBehaviour
                 runnerSkillInfoText.text = "Barrier - forms a circular barrier that keeps opponents inside for a certain amount of time. It takes 30 seconds to regenerate the Barrier ability. Barrier effect time depends on the level of the ability. There are total of 11 levels.";
                 return;
             }
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerWallPrices[LocalDatas.Instance.runnerWallLevel].ToString("n0");
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerWallPrices[Settings.User.rs.rWallLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] != 0 && LocalDatas.Instance.runnerWallLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7]) // Wall is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] != 0 && Settings.User.rs.rWallLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7]) // Wall is opened
             {
                 //runnerSkillsPrices = Skill.Instance.runnerTrap.Split('|');
                 runnerSkillInfoText.text = "Barrier - forms a circular barrier that keeps opponents inside for a certain amount of time. It takes 30 seconds to regenerate the Barrier ability. Barrier effect time depends on the level of the ability. There are total of 11 levels.";
                 //LocalDatas.Instance.Debug("\nrunnerSkillsPrices[0]" + runnerSkillsPrices[0]);
                 //TODO length of array ..
-                if (LocalDatas.Instance.runnerWallLevel < SomeDatas.Instance.runnerWallPrices.Length)
+                if (Settings.User.rs.rWallLevel < SomeDatas.Instance.runnerWallPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
 
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerWallPrices[LocalDatas.Instance.runnerWallLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerWallPrices[Settings.User.rs.rWallLevel].ToString("n0");
 
-                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString();
+                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString();
                 }
                 else
                 {
@@ -2210,14 +2209,14 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerWallLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rWallLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] != 0) // if skill level is not max for this level
             {
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(7, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
             }
             else // Trap skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerWallPrices[LocalDatas.Instance.runnerWallLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerWallPrices[Settings.User.rs.rWallLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
 
                 runnerSkillInfoText.text = "The skill is not active. Required activation level -" + WhenRunnerSkillWillOpen(7, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2228,16 +2227,16 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[3];
             currentRunnerSkillPressed = "Hook";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerHookLevel);
-            if (LocalDatas.Instance.runnerHookLevel == SomeDatas.Instance.runnerHookPrices.Length - 1) // 10 lvl
+            SetRunnerSkillLevels(Settings.User.rs.rHookLevel);
+            if (Settings.User.rs.rHookLevel == SomeDatas.Instance.runnerHookPrices.Length - 1) // 10 lvl
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.runnerHookLevel < SomeDatas.Instance.runnerHookPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.rs.rHookLevel < SomeDatas.Instance.runnerHookPrices.Length - 1) // 0-9 lvl
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerHookLevel >= SomeDatas.Instance.runnerHookPrices.Length) // 11 level
+            else if (Settings.User.rs.rHookLevel >= SomeDatas.Instance.runnerHookPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
@@ -2245,23 +2244,23 @@ public class MenuUIController : MonoBehaviour
                 runnerSkillInfoText.text = "Hook - the ability to move quickly in the direction of the thrown hook. The hook can be thrown in the desired direction toward solids. It takes 30 seconds to regenerate the Hook ability. Hook regeneration time depends on the level of the ability. There are total of 11 levels.";
                 return;
             }
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerHookPrices[LocalDatas.Instance.runnerHookLevel].ToString("n0");
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerHookPrices[Settings.User.rs.rHookLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] != 0 && LocalDatas.Instance.runnerHookLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8]) // Hook is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] != 0 && Settings.User.rs.rHookLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8]) // Hook is opened
             {
                 //runnerSkillsPrices = Skill.Instance.runnerTrap.Split('|');
                 runnerSkillInfoText.text = "Hook - the ability to move quickly in the direction of the thrown hook. The hook can be thrown in the desired direction toward solids. It takes 30 seconds to regenerate the Hook ability. Hook regeneration time depends on the level of the ability. There are total of 11 levels.";
                 //LocalDatas.Instance.Debug("\nrunnerSkillsPrices[0]" + runnerSkillsPrices[0]);
                 //TODO length of array ..
-                if (LocalDatas.Instance.runnerHookLevel < SomeDatas.Instance.runnerHookPrices.Length)
+                if (Settings.User.rs.rHookLevel < SomeDatas.Instance.runnerHookPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
 
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerHookPrices[LocalDatas.Instance.runnerHookLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerHookPrices[Settings.User.rs.rHookLevel].ToString("n0");
 
-                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString();
+                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString();
                 }
                 else
                 {
@@ -2269,7 +2268,7 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerHookLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rHookLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] != 0) // if skill level is not max for this level
             {
 
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(8, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2277,7 +2276,7 @@ public class MenuUIController : MonoBehaviour
             }
             else // Trap skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerHookPrices[LocalDatas.Instance.runnerHookLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerHookPrices[Settings.User.rs.rHookLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
                 runnerSkillInfoText.text = "The skill is not active. Required activation level - " + WhenRunnerSkillWillOpen(8, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
@@ -2287,40 +2286,40 @@ public class MenuUIController : MonoBehaviour
         {
             runnerSkillLevelImageBack.GetComponent<Image>().sprite = runnerSkillsLevelSpritesBack[3];
             currentRunnerSkillPressed = "Bot Clone";
-            SetRunnerSkillLevels(LocalDatas.Instance.runnerBCLevel);
-            if (LocalDatas.Instance.runnerBCLevel == SomeDatas.Instance.runnerBCPrices.Length - 1) // 10 lvl
+            SetRunnerSkillLevels(Settings.User.rs.rBCLevel);
+            if (Settings.User.rs.rBCLevel == SomeDatas.Instance.runnerBCPrices.Length - 1) // 10 lvl
             {
                 rightImageRunnerCoinImage.sprite = diamondSprite;
             }
-            else if(LocalDatas.Instance.runnerBCLevel < SomeDatas.Instance.runnerBCPrices.Length - 1) // 0-9 lvl
+            else if(Settings.User.rs.rBCLevel < SomeDatas.Instance.runnerBCPrices.Length - 1) // 0-9 lvl
             {
                 rightImageRunnerCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.runnerBCLevel >= SomeDatas.Instance.runnerBCPrices.Length) // 11 level
+            else if (Settings.User.rs.rBCLevel >= SomeDatas.Instance.runnerBCPrices.Length) // 11 level
             {
                 runnerSkillPriceText.text = "FULL";
                 improveRunnerButton.SetActive(false);
                 rightImageRunnerCoinImage.gameObject.SetActive(false);
-                runnerSkillInfoText.text = "Clone Bots - the ability to create two clone bots that will make your opponent confused. The bots will move around the arena for a certain amount of time. It takes 30 seconds to regenerate the Ñlone Bots ability. Clone Bots effect time depends on the level of the ability.";
+                runnerSkillInfoText.text = "Clone Bots - the ability to create two clone bots that will make your opponent confused. The bots will move around the arena for a certain amount of time. It takes 30 seconds to regenerate the ï¿½lone Bots ability. Clone Bots effect time depends on the level of the ability.";
                 return;
             }
-            runnerSkillPriceText.text = SomeDatas.Instance.runnerBCPrices[LocalDatas.Instance.runnerBCLevel].ToString("n0");
+            runnerSkillPriceText.text = SomeDatas.Instance.runnerBCPrices[Settings.User.rs.rBCLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] != 0 && LocalDatas.Instance.runnerBCLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9]) // Bot Clone is opened
+            if (SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] != 0 && Settings.User.rs.rBCLevel < SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9]) // Bot Clone is opened
             {
                 //runnerSkillsPrices = Skill.Instance.runnerTrap.Split('|');
-                runnerSkillInfoText.text = "Clone Bots - the ability to create two clone bots that will make your opponent confused. The bots will move around the arena for a certain amount of time. It takes 30 seconds to regenerate the Ñlone Bots ability. Clone Bots effect time depends on the level of the ability.";
+                runnerSkillInfoText.text = "Clone Bots - the ability to create two clone bots that will make your opponent confused. The bots will move around the arena for a certain amount of time. It takes 30 seconds to regenerate the ï¿½lone Bots ability. Clone Bots effect time depends on the level of the ability.";
                 //LocalDatas.Instance.Debug("\nrunnerSkillsPrices[0]" + runnerSkillsPrices[0]);
                 //TODO length of array ..
-                if (LocalDatas.Instance.runnerBCLevel < SomeDatas.Instance.runnerBCPrices.Length)
+                if (Settings.User.rs.rBCLevel < SomeDatas.Instance.runnerBCPrices.Length)
                 {
                     improveRunnerButton.GetComponent<Button>().interactable = true;
 
                     improveRunnerButton.SetActive(true);
 
-                    runnerSkillPriceText.text = SomeDatas.Instance.runnerBCPrices[LocalDatas.Instance.runnerBCLevel].ToString("n0");
+                    runnerSkillPriceText.text = SomeDatas.Instance.runnerBCPrices[Settings.User.rs.rBCLevel].ToString("n0");
 
-                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[LocalDatas.Instance.runnerAddHealth].ToString();
+                    //runnerSkillPriceText.text = SomeDatas.Instance.runnerAddHealthPrices[Settings.User.rs.rAddHealth].ToString();
                 }
                 else
                 {
@@ -2328,7 +2327,7 @@ public class MenuUIController : MonoBehaviour
                     runnerSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.runnerBCLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] != 0) // if skill level is not max for this level
+            else if (Settings.User.rs.rBCLevel >= SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] && SomeDatas.Instance.maxRunnerSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] != 0) // if skill level is not max for this level
             {
 
                 runnerSkillInfoText.text = "Required activation level - " + WhenRunnerSkillWillOpen(9, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2336,7 +2335,7 @@ public class MenuUIController : MonoBehaviour
             }
             else // Trap skill is not opened yet
             {
-                runnerSkillPriceText.text = SomeDatas.Instance.runnerBCPrices[LocalDatas.Instance.runnerBCLevel].ToString("n0");
+                runnerSkillPriceText.text = SomeDatas.Instance.runnerBCPrices[Settings.User.rs.rBCLevel].ToString("n0");
                 runnerSkillInfoText.color = skillInfoColorNotOpened;
                 runnerSkillInfoText.text = "The skill is not active. Required activation level -" + WhenRunnerSkillWillOpen(9, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveRunnerButton.GetComponent<Button>().interactable = false;
@@ -2362,16 +2361,16 @@ public class MenuUIController : MonoBehaviour
         {
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[0];
             currentCatcherSkillPressed = "Sprint";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherSpeedLevel);
-            if (LocalDatas.Instance.catcherSpeedLevel == SomeDatas.Instance.catcherSpeedPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cSpeedLevel);
+            if (Settings.User.cs.cSpeedLevel == SomeDatas.Instance.catcherSpeedPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if(LocalDatas.Instance.catcherSpeedLevel < SomeDatas.Instance.catcherSpeedPrices.Length - 1) // 0-9 lvl
+            else if(Settings.User.cs.cSpeedLevel < SomeDatas.Instance.catcherSpeedPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherSpeedLevel >= SomeDatas.Instance.catcherSpeedPrices.Length) // 11 level
+            else if (Settings.User.cs.cSpeedLevel >= SomeDatas.Instance.catcherSpeedPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2379,17 +2378,17 @@ public class MenuUIController : MonoBehaviour
                 catcherSkillInfoText.text = "Sprint is the ability to move temporarily quickly around the map. It takes 30 seconds to regenerate the Sprint ability. Sprint effect time depends on the level of the ability. There are total of 11 levels.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherSpeedPrices[LocalDatas.Instance.catcherSpeedLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherSpeedPrices[Settings.User.cs.cSpeedLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] != 0 && LocalDatas.Instance.catcherSpeedLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0]) // Sprint is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] != 0 && Settings.User.cs.cSpeedLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0]) // Sprint is opened
             {
                 catcherSkillInfoText.text = "Sprint is the ability to move temporarily quickly around the map. It takes 30 seconds to regenerate the Sprint ability. Sprint effect time depends on the level of the ability. There are total of 11 levels.";
-                if (LocalDatas.Instance.catcherSpeedLevel < SomeDatas.Instance.catcherSpeedPrices.Length)
+                if (Settings.User.cs.cSpeedLevel < SomeDatas.Instance.catcherSpeedPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherSpeedPrices[LocalDatas.Instance.catcherSpeedLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherSpeedPrices[Settings.User.cs.cSpeedLevel].ToString("n0");
                 }
                 else
                 {
@@ -2398,14 +2397,14 @@ public class MenuUIController : MonoBehaviour
                     catcherSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.catcherSpeedLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cSpeedLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 0] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(0, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // Sprint skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherSpeedPrices[LocalDatas.Instance.catcherSpeedLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherSpeedPrices[Settings.User.cs.cSpeedLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(0, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2416,16 +2415,16 @@ public class MenuUIController : MonoBehaviour
         {
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[1];
             currentCatcherSkillPressed = "Shield";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherShieldLevel);
-            if (LocalDatas.Instance.catcherShieldLevel == SomeDatas.Instance.catcherShieldPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cShieldLevel);
+            if (Settings.User.cs.cShieldLevel == SomeDatas.Instance.catcherShieldPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherShieldLevel < SomeDatas.Instance.catcherShieldPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cShieldLevel < SomeDatas.Instance.catcherShieldPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherShieldLevel >= SomeDatas.Instance.catcherShieldPrices.Length) // 11 level
+            else if (Settings.User.cs.cShieldLevel >= SomeDatas.Instance.catcherShieldPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2433,23 +2432,23 @@ public class MenuUIController : MonoBehaviour
                 catcherSkillInfoText.text = "SHIELD Shields the Hero(character) for certain seconds depending on level of the ability. It takes 30 seconds to regenerate the Shield ability. There are total of 11 levels.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherShieldPrices[LocalDatas.Instance.catcherShieldLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherShieldPrices[Settings.User.cs.cShieldLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] != 0 && LocalDatas.Instance.catcherShieldLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1]) // Shield is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] != 0 && Settings.User.cs.cShieldLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1]) // Shield is opened
             {
                 catcherSkillInfoText.text = "SHIELD Shields the Hero(character) for certain seconds depending on level of the ability. It takes 30 seconds to regenerate the Shield ability. There are total of 11 levels.";
 
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
 
                 //catcherSkillsPrices = Skill.Instance.catcherShield.Split('|');
-                if (LocalDatas.Instance.catcherShieldLevel < SomeDatas.Instance.catcherShieldPrices.Length)
+                if (Settings.User.cs.cShieldLevel < SomeDatas.Instance.catcherShieldPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherShieldPrices[LocalDatas.Instance.catcherShieldLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherShieldPrices[Settings.User.cs.cShieldLevel].ToString("n0");
                 }
                 else
                 {
@@ -2458,14 +2457,14 @@ public class MenuUIController : MonoBehaviour
                     catcherSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.catcherShieldLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cShieldLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 1] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(1, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // Shield skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherShieldPrices[LocalDatas.Instance.catcherShieldLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherShieldPrices[Settings.User.cs.cShieldLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(1, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2478,16 +2477,16 @@ public class MenuUIController : MonoBehaviour
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[2];
 
             currentCatcherSkillPressed = "Invisibility";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherInvisibilityLevel);
-            if (LocalDatas.Instance.catcherInvisibilityLevel == SomeDatas.Instance.catcherInvisibilityPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cInvisibilityLevel);
+            if (Settings.User.cs.cInvisibilityLevel == SomeDatas.Instance.catcherInvisibilityPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherInvisibilityLevel < SomeDatas.Instance.catcherInvisibilityPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cInvisibilityLevel < SomeDatas.Instance.catcherInvisibilityPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherInvisibilityLevel >= SomeDatas.Instance.catcherInvisibilityPrices.Length) // 11 level
+            else if (Settings.User.cs.cInvisibilityLevel >= SomeDatas.Instance.catcherInvisibilityPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2496,20 +2495,20 @@ public class MenuUIController : MonoBehaviour
                 return;
             }
 
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherInvisibilityPrices[LocalDatas.Instance.catcherInvisibilityLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherInvisibilityPrices[Settings.User.cs.cInvisibilityLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] != 0 && LocalDatas.Instance.catcherInvisibilityLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2]) // Invisibility is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] != 0 && Settings.User.cs.cInvisibilityLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2]) // Invisibility is opened
             {
                 catcherSkillInfoText.text = "Invisibility is the phenomenon of becoming invisible to the eye. It takes 30 seconds to regenerate the Invisibility ability. Invisibility effect time depends on the level of the ability. There are total of 11 levels.";
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
                 //catcherSkillsPrices = Skill.Instance.catcherInvisibility.Split('|');
-                if (LocalDatas.Instance.catcherInvisibilityLevel < SomeDatas.Instance.catcherInvisibilityPrices.Length)
+                if (Settings.User.cs.cInvisibilityLevel < SomeDatas.Instance.catcherInvisibilityPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherInvisibilityPrices[LocalDatas.Instance.catcherInvisibilityLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherInvisibilityPrices[Settings.User.cs.cInvisibilityLevel].ToString("n0");
                 }
                 else
                 {
@@ -2518,14 +2517,14 @@ public class MenuUIController : MonoBehaviour
                     catcherSkillPriceText.text = "FULL";
                 }
             }
-            else if (LocalDatas.Instance.catcherInvisibilityLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cInvisibilityLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 2] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(2, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // Invisibility skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherInvisibilityPrices[LocalDatas.Instance.catcherInvisibilityLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherInvisibilityPrices[Settings.User.cs.cInvisibilityLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(2, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2538,16 +2537,16 @@ public class MenuUIController : MonoBehaviour
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[3];
 
             currentCatcherSkillPressed = "ExtraBall";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherBallLevel);
-            if (LocalDatas.Instance.catcherBallLevel == SomeDatas.Instance.catcherBallPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cBallLevel);
+            if (Settings.User.cs.cBallLevel == SomeDatas.Instance.catcherBallPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherBallLevel < SomeDatas.Instance.catcherBallPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cBallLevel < SomeDatas.Instance.catcherBallPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherBallLevel >= SomeDatas.Instance.catcherBallPrices.Length) // 11 level
+            else if (Settings.User.cs.cBallLevel >= SomeDatas.Instance.catcherBallPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2555,20 +2554,20 @@ public class MenuUIController : MonoBehaviour
                 catcherSkillInfoText.text = "The \"Balls\" ability adds additional balls that are selected before entering the game. There are a total of 3 levels, therefore balls are added depending on the level.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherBallPrices[LocalDatas.Instance.catcherBallLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherBallPrices[Settings.User.cs.cBallLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] != 0 && LocalDatas.Instance.catcherBallLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3]) // ExtraBall is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] != 0 && Settings.User.cs.cBallLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3]) // ExtraBall is opened
             {
                 catcherSkillInfoText.text = "The \"Balls\" ability adds additional balls that are selected before entering the game. There are a total of 3 levels, therefore balls are added depending on the level.";
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
                 //catcherSkillsPrices = Skill.Instance.catcherMapShow.Split('|');
-                if (LocalDatas.Instance.catcherBallLevel < SomeDatas.Instance.catcherBallPrices.Length)
+                if (Settings.User.cs.cBallLevel < SomeDatas.Instance.catcherBallPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherBallPrices[LocalDatas.Instance.catcherBallLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherBallPrices[Settings.User.cs.cBallLevel].ToString("n0");
                 }
                 else
                 {
@@ -2578,14 +2577,14 @@ public class MenuUIController : MonoBehaviour
                 }
 
             }
-            else if (LocalDatas.Instance.catcherBallLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cBallLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 3] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(3, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // ExtraBall skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherBallPrices[LocalDatas.Instance.catcherBallLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherBallPrices[Settings.User.cs.cBallLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(3, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2597,16 +2596,16 @@ public class MenuUIController : MonoBehaviour
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[3];
 
             currentCatcherSkillPressed = "SlowDownTrap";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherSlowdownTrapLevel);
-            if (LocalDatas.Instance.catcherSlowdownTrapLevel == SomeDatas.Instance.catcherSTDPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cSDTlevel);
+            if (Settings.User.cs.cSDTlevel == SomeDatas.Instance.catcherSTDPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherSlowdownTrapLevel < SomeDatas.Instance.catcherSTDPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cSDTlevel < SomeDatas.Instance.catcherSTDPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherSlowdownTrapLevel >= SomeDatas.Instance.catcherSTDPrices.Length) // 11 level
+            else if (Settings.User.cs.cSDTlevel >= SomeDatas.Instance.catcherSTDPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2614,20 +2613,20 @@ public class MenuUIController : MonoBehaviour
                 catcherSkillInfoText.text = "Slowing Down Trap - the ability to throw a circular field in a certain direction in order to slow down opponents for a defined amount of time within the range of the field. It takes 30 seconds to regenerate the Slowing Down Trap. Slowing Down Trap effect time depends on the level of the ability.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherSTDPrices[LocalDatas.Instance.catcherSlowdownTrapLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherSTDPrices[Settings.User.cs.cSDTlevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] != 0 && LocalDatas.Instance.catcherSlowdownTrapLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4]) // SlowDownTrap is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] != 0 && Settings.User.cs.cSDTlevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4]) // SlowDownTrap is opened
             {
                 catcherSkillInfoText.text = "Slowing Down Trap - the ability to throw a circular field in a certain direction in order to slow down opponents for a defined amount of time within the range of the field. It takes 30 seconds to regenerate the Slowing Down Trap. Slowing Down Trap effect time depends on the level of the ability.";
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
                 //catcherSkillsPrices = Skill.Instance.catcherMapShow.Split('|');
-                if (LocalDatas.Instance.catcherSlowdownTrapLevel < SomeDatas.Instance.catcherSTDPrices.Length)
+                if (Settings.User.cs.cSDTlevel < SomeDatas.Instance.catcherSTDPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherSTDPrices[LocalDatas.Instance.catcherSlowdownTrapLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherSTDPrices[Settings.User.cs.cSDTlevel].ToString("n0");
                 }
                 else
                 {
@@ -2637,14 +2636,14 @@ public class MenuUIController : MonoBehaviour
                 }
 
             }
-            else if (LocalDatas.Instance.catcherSlowdownTrapLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cSDTlevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 4] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(4, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // ExtraBall skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherSTDPrices[LocalDatas.Instance.catcherBallLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherSTDPrices[Settings.User.cs.cBallLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(4, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2656,16 +2655,16 @@ public class MenuUIController : MonoBehaviour
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[3];
 
             currentCatcherSkillPressed = "TopView";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherTopViewLevel);
-            if (LocalDatas.Instance.catcherTopViewLevel == SomeDatas.Instance.catcherTopViewPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cTopViewLevel);
+            if (Settings.User.cs.cTopViewLevel == SomeDatas.Instance.catcherTopViewPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherTopViewLevel < SomeDatas.Instance.catcherTopViewPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cTopViewLevel < SomeDatas.Instance.catcherTopViewPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherTopViewLevel >= SomeDatas.Instance.catcherTopViewPrices.Length) // 11 level
+            else if (Settings.User.cs.cTopViewLevel >= SomeDatas.Instance.catcherTopViewPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2673,20 +2672,20 @@ public class MenuUIController : MonoBehaviour
                 catcherSkillInfoText.text = "Top View - the ability gives you the view of the arena from above. All opponents and their actions will be visible at a certain time. It takes 30 seconds to regenerate the Top View ability. Top View effect time depends on the level of the ability.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherTopViewPrices[LocalDatas.Instance.catcherTopViewLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherTopViewPrices[Settings.User.cs.cTopViewLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] != 0 && LocalDatas.Instance.catcherTopViewLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5]) // TopView is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] != 0 && Settings.User.cs.cTopViewLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5]) // TopView is opened
             {
                 catcherSkillInfoText.text = "Top View - the ability gives you the view of the arena from above. All opponents and their actions will be visible at a certain time. It takes 30 seconds to regenerate the Top View ability. Top View effect time depends on the level of the ability.";
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
                 //catcherSkillsPrices = Skill.Instance.catcherMapShow.Split('|');
-                if (LocalDatas.Instance.catcherTopViewLevel < SomeDatas.Instance.catcherTopViewPrices.Length)
+                if (Settings.User.cs.cTopViewLevel < SomeDatas.Instance.catcherTopViewPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherTopViewPrices[LocalDatas.Instance.catcherTopViewLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherTopViewPrices[Settings.User.cs.cTopViewLevel].ToString("n0");
                 }
                 else
                 {
@@ -2696,14 +2695,14 @@ public class MenuUIController : MonoBehaviour
                 }
 
             }
-            else if (LocalDatas.Instance.catcherTopViewLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cTopViewLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 5] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(5, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // ExtraBall skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherTopViewPrices[LocalDatas.Instance.catcherBallLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherTopViewPrices[Settings.User.cs.cBallLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(5, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2715,16 +2714,16 @@ public class MenuUIController : MonoBehaviour
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[3];
 
             currentCatcherSkillPressed = "Wall";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherWallLevel);
-            if (LocalDatas.Instance.catcherWallLevel == SomeDatas.Instance.catcherWallPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cWallLevel);
+            if (Settings.User.cs.cWallLevel == SomeDatas.Instance.catcherWallPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherWallLevel < SomeDatas.Instance.catcherWallPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cWallLevel < SomeDatas.Instance.catcherWallPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherWallLevel >= SomeDatas.Instance.catcherWallPrices.Length) // 11 level
+            else if (Settings.User.cs.cWallLevel >= SomeDatas.Instance.catcherWallPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2732,20 +2731,20 @@ public class MenuUIController : MonoBehaviour
                 catcherSkillInfoText.text = "Barrier - forms a circular barrier that keeps opponents inside for a certain amount of time. It takes 30 seconds to regenerate the Barrier ability. Barrier effect time depends on the level of the ability. There are total of 11 levels.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherWallPrices[LocalDatas.Instance.catcherWallLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherWallPrices[Settings.User.cs.cWallLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] != 0 && LocalDatas.Instance.catcherWallLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6]) // Wall is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] != 0 && Settings.User.cs.cWallLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6]) // Wall is opened
             {
                 catcherSkillInfoText.text = "Barrier - forms a circular barrier that keeps opponents inside for a certain amount of time. It takes 30 seconds to regenerate the Barrier ability. Barrier effect time depends on the level of the ability. There are total of 11 levels.";
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
                 //catcherSkillsPrices = Skill.Instance.catcherMapShow.Split('|');
-                if (LocalDatas.Instance.catcherWallLevel < SomeDatas.Instance.catcherWallPrices.Length)
+                if (Settings.User.cs.cWallLevel < SomeDatas.Instance.catcherWallPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherWallPrices[LocalDatas.Instance.catcherWallLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherWallPrices[Settings.User.cs.cWallLevel].ToString("n0");
                 }
                 else
                 {
@@ -2755,14 +2754,14 @@ public class MenuUIController : MonoBehaviour
                 }
 
             }
-            else if (LocalDatas.Instance.catcherWallLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cWallLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 6] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(6, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // ExtraBall skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherWallPrices[LocalDatas.Instance.catcherBallLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherWallPrices[Settings.User.cs.cBallLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(6, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2774,16 +2773,16 @@ public class MenuUIController : MonoBehaviour
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[3];
 
             currentCatcherSkillPressed = "Hook";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherHookLevel);
-            if (LocalDatas.Instance.catcherHookLevel == SomeDatas.Instance.catcherHookPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cHookLevel);
+            if (Settings.User.cs.cHookLevel == SomeDatas.Instance.catcherHookPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherHookLevel < SomeDatas.Instance.catcherHookPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cHookLevel < SomeDatas.Instance.catcherHookPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherHookLevel >= SomeDatas.Instance.catcherHookPrices.Length) // 11 level
+            else if (Settings.User.cs.cHookLevel >= SomeDatas.Instance.catcherHookPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2791,20 +2790,20 @@ public class MenuUIController : MonoBehaviour
                 catcherSkillInfoText.text = "Hook - the ability to move quickly in the direction of the thrown hook. The hook can be thrown in the desired direction toward solids. It takes 30 seconds to regenerate the Hook ability. Hook regeneration time depends on the level of the ability. There are total of 11 levels.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherHookPrices[LocalDatas.Instance.catcherHookLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherHookPrices[Settings.User.cs.cHookLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] != 0 && LocalDatas.Instance.catcherHookLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7]) // Hook is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] != 0 && Settings.User.cs.cHookLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7]) // Hook is opened
             {
                 catcherSkillInfoText.text = "Hook - the ability to move quickly in the direction of the thrown hook. The hook can be thrown in the desired direction toward solids. It takes 30 seconds to regenerate the Hook ability. Hook regeneration time depends on the level of the ability. There are total of 11 levels.";
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
                 //catcherSkillsPrices = Skill.Instance.catcherMapShow.Split('|');
-                if (LocalDatas.Instance.catcherHookLevel < SomeDatas.Instance.catcherHookPrices.Length)
+                if (Settings.User.cs.cHookLevel < SomeDatas.Instance.catcherHookPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherHookPrices[LocalDatas.Instance.catcherHookLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherHookPrices[Settings.User.cs.cHookLevel].ToString("n0");
                 }
                 else
                 {
@@ -2814,14 +2813,14 @@ public class MenuUIController : MonoBehaviour
                 }
 
             }
-            else if (LocalDatas.Instance.catcherHookLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cHookLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 7] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(7, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // ExtraBall skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherHookPrices[LocalDatas.Instance.catcherBallLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherHookPrices[Settings.User.cs.cBallLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(7, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2831,18 +2830,17 @@ public class MenuUIController : MonoBehaviour
         else if (button.name == "Death Shot")
         {
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[3];
-
             currentCatcherSkillPressed = "Deadly Hit";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherDeadlyHitLevel);
-            if (LocalDatas.Instance.catcherDeadlyHitLevel == SomeDatas.Instance.catcherDHPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cDHLevel);
+            if (Settings.User.cs.cDHLevel == SomeDatas.Instance.catcherDHPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherDeadlyHitLevel < SomeDatas.Instance.catcherDHPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cDHLevel < SomeDatas.Instance.catcherDHPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherDeadlyHitLevel >= SomeDatas.Instance.catcherDHPrices.Length) // 11 level
+            else if (Settings.User.cs.cDHLevel >= SomeDatas.Instance.catcherDHPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
@@ -2850,20 +2848,20 @@ public class MenuUIController : MonoBehaviour
                 catcherSkillInfoText.text = "Death Shot - the ability to shoot in a chosen direction. The beams can go through walls or rocks. It takes 30 seconds to regenerate the Death Shot ability. Death Shot regeneration time depends on the level of the ability.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherDHPrices[LocalDatas.Instance.catcherDeadlyHitLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherDHPrices[Settings.User.cs.cDHLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] != 0 && LocalDatas.Instance.catcherDeadlyHitLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8]) // Deadly Hit is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] != 0 && Settings.User.cs.cDHLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8]) // Deadly Hit is opened
             {
                 catcherSkillInfoText.text = "Death Shot - the ability to shoot in a chosen direction. The beams can go through walls or rocks. It takes 30 seconds to regenerate the Death Shot ability. Death Shot regeneration time depends on the level of the ability.";
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
                 //catcherSkillsPrices = Skill.Instance.catcherMapShow.Split('|');
-                if (LocalDatas.Instance.catcherDeadlyHitLevel < SomeDatas.Instance.catcherDHPrices.Length)
+                if (Settings.User.cs.cDHLevel < SomeDatas.Instance.catcherDHPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherDHPrices[LocalDatas.Instance.catcherDeadlyHitLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherDHPrices[Settings.User.cs.cDHLevel].ToString("n0");
                 }
                 else
                 {
@@ -2873,14 +2871,14 @@ public class MenuUIController : MonoBehaviour
                 }
 
             }
-            else if (LocalDatas.Instance.catcherDeadlyHitLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cDHLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 8] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(8, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // Deadly Hit skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherDHPrices[LocalDatas.Instance.catcherDeadlyHitLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherDHPrices[Settings.User.cs.cDHLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(8, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -2892,37 +2890,37 @@ public class MenuUIController : MonoBehaviour
             catcherSkillLevelImageBack.GetComponent<Image>().sprite = catcherSkillsLevelSpritesBack[3];
 
             currentCatcherSkillPressed = "Bot Clone";
-            SetCatcherSkillLevels(LocalDatas.Instance.catcherBCLevel);
-            if (LocalDatas.Instance.catcherBCLevel == SomeDatas.Instance.catcherBCPrices.Length - 1) // 10 lvl
+            SetCatcherSkillLevels(Settings.User.cs.cBCLevel);
+            if (Settings.User.cs.cBCLevel == SomeDatas.Instance.catcherBCPrices.Length - 1) // 10 lvl
             {
                 rightImageCatcherCoinImage.sprite = diamondSprite;
             }
-            else if (LocalDatas.Instance.catcherBCLevel < SomeDatas.Instance.catcherBCPrices.Length - 1) // 0-9 lvl
+            else if (Settings.User.cs.cBCLevel < SomeDatas.Instance.catcherBCPrices.Length - 1) // 0-9 lvl
             {
                 rightImageCatcherCoinImage.sprite = coinSprite;
             }
-            else if (LocalDatas.Instance.catcherBCLevel >= SomeDatas.Instance.catcherBCPrices.Length) // 11 level
+            else if (Settings.User.cs.cBCLevel >= SomeDatas.Instance.catcherBCPrices.Length) // 11 level
             {
                 catcherSkillPriceText.text = "FULL";
                 improveCatcherButton.SetActive(false);
                 rightImageCatcherCoinImage.gameObject.SetActive(false);
-                catcherSkillInfoText.text = "Clone Bots - the ability to create two clone bots that will make your opponent confused. The bots will move around the arena for a certain amount of time. It takes 30 seconds to regenerate the Ñlone Bots ability. Clone Bots effect time depends on the level of the ability.";
+                catcherSkillInfoText.text = "Clone Bots - the ability to create two clone bots that will make your opponent confused. The bots will move around the arena for a certain amount of time. It takes 30 seconds to regenerate the ï¿½lone Bots ability. Clone Bots effect time depends on the level of the ability.";
                 return;
             }
-            catcherSkillPriceText.text = SomeDatas.Instance.catcherBCPrices[LocalDatas.Instance.catcherBCLevel].ToString("n0");
+            catcherSkillPriceText.text = SomeDatas.Instance.catcherBCPrices[Settings.User.cs.cBCLevel].ToString("n0");
 
-            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] != 0 && LocalDatas.Instance.catcherBCLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9]) // Bot Clone is opened
+            if (SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] != 0 && Settings.User.cs.cBCLevel < SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9]) // Bot Clone is opened
             {
-                catcherSkillInfoText.text = "Clone Bots - the ability to create two clone bots that will make your opponent confused. The bots will move around the arena for a certain amount of time. It takes 30 seconds to regenerate the Ñlone Bots ability. Clone Bots effect time depends on the level of the ability.";
+                catcherSkillInfoText.text = "Clone Bots - the ability to create two clone bots that will make your opponent confused. The bots will move around the arena for a certain amount of time. It takes 30 seconds to regenerate the ï¿½lone Bots ability. Clone Bots effect time depends on the level of the ability.";
                 //LocalDatas.Instance.Debug("\ncatcherSkillsPrices[0]" + catcherSkillsPrices[0]);
                 //catcherSkillsPrices = Skill.Instance.catcherMapShow.Split('|');
-                if (LocalDatas.Instance.catcherBCLevel < SomeDatas.Instance.catcherBCPrices.Length)
+                if (Settings.User.cs.cBCLevel < SomeDatas.Instance.catcherBCPrices.Length)
                 {
                     improveCatcherButton.GetComponent<Button>().interactable = true;
 
                     improveCatcherButton.SetActive(true);
 
-                    catcherSkillPriceText.text = SomeDatas.Instance.catcherBCPrices[LocalDatas.Instance.catcherBCLevel].ToString("n0");
+                    catcherSkillPriceText.text = SomeDatas.Instance.catcherBCPrices[Settings.User.cs.cBCLevel].ToString("n0");
                 }
                 else
                 {
@@ -2932,14 +2930,14 @@ public class MenuUIController : MonoBehaviour
                 }
 
             }
-            else if (LocalDatas.Instance.catcherBCLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] != 0) // if skill level is not max for this level
+            else if (Settings.User.cs.cBCLevel >= SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] && SomeDatas.Instance.maxCatcherSkillLevelPerLevel[LocalDatas.Instance.currentLevelIntervalIndex, 9] != 0) // if skill level is not max for this level
             {
                 catcherSkillInfoText.text = "Required activation level - " + WhenCatcherSkillWillOpen(9, LocalDatas.Instance.currentLevelIntervalIndex);
                 improveCatcherButton.GetComponent<Button>().interactable = false;
             }
             else // ExtraBall skill is not opened yet
             {
-                catcherSkillPriceText.text = SomeDatas.Instance.catcherBCPrices[LocalDatas.Instance.catcherBCLevel].ToString("n0");
+                catcherSkillPriceText.text = SomeDatas.Instance.catcherBCPrices[Settings.User.cs.cBCLevel].ToString("n0");
                 catcherSkillInfoText.color = skillInfoColorNotOpened;
 
                 catcherSkillInfoText.text = "The skill is not active. Required activation level - " + WhenCatcherSkillWillOpen(9, LocalDatas.Instance.currentLevelIntervalIndex);
@@ -3067,7 +3065,7 @@ public class MenuUIController : MonoBehaviour
 
     public void CheckIfCanChangeNick()
     {
-        if (LocalDatas.Instance.crystalCoin >= LocalDatas.Instance.changeNickPrice)
+        if (Settings.User.starCoin >= LocalDatas.Instance.changeNickPrice)
         {
             OpenChangeNickPanel();
         }
@@ -3096,11 +3094,11 @@ public class MenuUIController : MonoBehaviour
 
     public void SaveChangedNickname()
     {
-        LocalDatas.Instance.crystalCoin -= LocalDatas.Instance.changeNickPrice;
-        LocalDatas.Instance.nickName = changeNickInputfield.text;
+        Settings.User.starCoin -= LocalDatas.Instance.changeNickPrice;
+        Settings.User.nickName = changeNickInputfield.text;
         changeNickInputfield.text = "";
         LocalDatas.Instance.SetNickNameTexts();
-        FirebaseController.Instance.SaveData();
+        SaveLoadManager.Save(Settings.User);
         CloseChangeNickPanel();
     }
 
@@ -3230,11 +3228,11 @@ public class MenuUIController : MonoBehaviour
     public void BuyCharacter()
     {
         // If character must be bought
-        if (LocalDatas.Instance.characters[openedCharacterIndex] == 0)
+        if (Settings.User.characters[openedCharacterIndex] == '0')
         {
             if (openedCharacterIndex >= 0)
             {
-                if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.characterPrices[openedCharacterIndex])
+                if (Settings.User.ssCoin >= SomeDatas.Instance.characterPrices[openedCharacterIndex])
                 {
                     // Buying
                     // TODO save delay
@@ -3242,14 +3240,12 @@ public class MenuUIController : MonoBehaviour
 
 
                     LocalDatas.Instance.SetCharacterBuyButton(1);
-                    LocalDatas.Instance.ssCoin -= SomeDatas.Instance.characterPrices[openedCharacterIndex];
-                    LocalDatas.Instance.characters[openedCharacterIndex] = 1;
-                    LocalDatas.Instance.ShowDatas();
+                    Settings.User.ssCoin -= SomeDatas.Instance.characterPrices[openedCharacterIndex];
+                    Utils.SetCharAtIndex(Settings.User.characters, openedCharacterIndex, '1');
                     lockPanels[openedCharacterIndex].GetComponent<Image>().color = Color.black;
                     LocalDatas.Instance.SetUICoins();
-                    LocalDatas.Instance.SetCharactersLocks();
                     characterInsidePricePanel.SetActive(false);
-                    FirebaseController.Instance.SaveData();
+                    SaveLoadManager.Save(Settings.User);
                     AudioManager.Instance.Play(2);
                 }
                 else // if we dont have enough money 
@@ -3284,10 +3280,9 @@ public class MenuUIController : MonoBehaviour
         LeanTween.alpha(characterInsideMenu.GetComponent<RectTransform>(), 1f, time).setEase(LeanTweenType.pingPong);
         characterInsideMenu.GetComponent<Image>().raycastTarget = true;
         characterInsideMenuChild.SetActive(true);
-        //LocalDatas.Instance.DebugToUI("\n1013: " + LocalDatas.Instance.characters[_openedCharacterIndex]);
         SetCharacterSprintLevel(SomeDatas.Instance.characterSprintLevels[_openedCharacterIndex]);
         SetCharacterDashLevel(SomeDatas.Instance.characterDashLevels[_openedCharacterIndex]);
-        if (LocalDatas.Instance.characters[_openedCharacterIndex] == 0)
+        if (Settings.User.characters[_openedCharacterIndex] == '0')
         {
             // If we can buy character
             if (_openedCharacterIndex <= SomeDatas.Instance.lastIndexPerLevelInterval[LocalDatas.Instance.currentLevelIntervalIndexForCharacters])
@@ -3462,7 +3457,7 @@ public class MenuUIController : MonoBehaviour
     public void ArenaButtonPressed(int mapIndex)
     {
         pressedArenaIndex = mapIndex;
-        if (LocalDatas.Instance.arenas[mapIndex] == 0) // we havent bought it, ruSure to buy opens
+        if (Settings.User.arenas[mapIndex] == '0') // we havent bought it, ruSure to buy opens
         {
             // rusure achilir
             ruSureArenaPanel.GetComponent<Image>().color = transparentColor;
@@ -3478,7 +3473,7 @@ public class MenuUIController : MonoBehaviour
             arenaButtonInMainMenu.GetComponent<Image>().sprite = arenaButtonSprites[mapIndex];
             for (int i = 0; i < FirebaseController.Instance.selectTextsInArenaButtons.Length; i++)
             {
-                if (LocalDatas.Instance.arenas[mapIndex] != 0)
+                if (Settings.User.arenas[mapIndex] != '0')
                 {
                     if (i == mapIndex)
                     {
@@ -3501,13 +3496,13 @@ public class MenuUIController : MonoBehaviour
     }
     public void BuyArena()
     {
-        if (LocalDatas.Instance.crystalCoin >= SomeDatas.Instance.arenaPrices[pressedArenaIndex])
+        if (Settings.User.starCoin >= SomeDatas.Instance.arenaPrices[pressedArenaIndex])
         {
             // Buying
             AudioManager.Instance.Play(1);
-            LocalDatas.Instance.crystalCoin -= SomeDatas.Instance.arenaPrices[pressedArenaIndex];
-            LocalDatas.Instance.arenas[pressedArenaIndex] = 1;
-            FirebaseController.Instance.SaveData();
+            Settings.User.starCoin -= SomeDatas.Instance.arenaPrices[pressedArenaIndex];
+            Utils.SetCharAtIndex(Settings.User.arenas, pressedArenaIndex, '1');
+            SaveLoadManager.Save(Settings.User);
             ruSureArenaPanel.SetActive(false);
         }
         else
@@ -3765,21 +3760,21 @@ public class MenuUIController : MonoBehaviour
 
     public void BuyOrSelectVFX()
     {
-        if (LocalDatas.Instance.ballSkins[pressedBallBUttonIndex] == 0)
+        if (Settings.User.vfxs[pressedBallBUttonIndex] == '0')
         {
             // Buying
-            if (LocalDatas.Instance.ssCoin >= SomeDatas.Instance.ballPrices[pressedBallBUttonIndex])
+            if (Settings.User.ssCoin >= SomeDatas.Instance.ballPrices[pressedBallBUttonIndex])
             {
                 // If we have money to buy
                 // TODO buying
                 AudioManager.Instance.Play(2);
                 SetVFXSelectOrBuyButton(1); // set button from buy, to select
                 rightVFXText.gameObject.SetActive(false);
-                LocalDatas.Instance.ssCoin -= SomeDatas.Instance.ballPrices[pressedBallBUttonIndex];
-                LocalDatas.Instance.ballSkins[pressedBallBUttonIndex] = 1;
+                Settings.User.ssCoin -= SomeDatas.Instance.ballPrices[pressedBallBUttonIndex];
+                Utils.SetCharAtIndex(Settings.User.vfxs, pressedBallBUttonIndex, '1');
                 LocalDatas.Instance.SetUICoins();
                 LocalDatas.Instance.vfxPriceTextPanels[pressedBallBUttonIndex].SetActive(false);
-                FirebaseController.Instance.SaveData();
+                SaveLoadManager.Save(Settings.User);
             }
             else
             {
@@ -3795,7 +3790,7 @@ public class MenuUIController : MonoBehaviour
             LocalDatas.Instance.currentBallSkinIndex = pressedBallBUttonIndex;
             for (int i = 0; i < SomeDatas.Instance.ballPrices.Length; i++)
             {
-                if (LocalDatas.Instance.ballSkins[i] == 1)
+                if (Settings.User.vfxs[i] == '1')
                 {
                     if (i == pressedBallBUttonIndex)
                     {
@@ -3822,7 +3817,7 @@ public class MenuUIController : MonoBehaviour
     {
         pressedBallBUttonIndex = ballIndex;
         rightVFXImage.sprite = vfxButtonsImages[ballIndex].GetComponent<Image>().sprite;
-        if (LocalDatas.Instance.ballSkins[ballIndex] == 0) // buy chixmalidir
+        if (Settings.User.vfxs[ballIndex] == '0') // buy chixmalidir
         {
             // if we can buy it
             //if (LocalDatas.Instance.level >= WhenVFXWillOpen(ballIndex))
@@ -4013,6 +4008,91 @@ public class MenuUIController : MonoBehaviour
         }
     }
 
+    public void SetToUI()
+    {
+        Debug.Log("Starting Setting To UI");
+        LocalDatas.Instance.currentCharacterIndex = PlayerPrefs.GetInt(Settings.characterIndex);
+        LocalDatas.Instance.currentBallSkinIndex = PlayerPrefs.GetInt(vfxIndex);
+        LocalDatas.Instance.currentMapIndex = (byte)PlayerPrefs.GetInt(Settings.mapIndex);
 
+        for (int i = 0; i < SomeDatas.Instance.characterNames.Length; i++)
+        {
+            var text = Utils.FindGameObject("NameText", CommonObjects.Instance.CharactersButtons[i]).GetComponent<TMP_Text>();
+            var lockPanel = Utils.FindGameObject("LockPanel", CommonObjects.Instance.CharactersButtons[i]);
+            var pricePanel = Utils.FindGameObject("CharacterPricePanel", CommonObjects.Instance.CharactersButtons[i]);
+            text.text = SomeDatas.Instance.characterNames[i];
+            lockPanel.SetActive(Settings.User.characters[i] == '0' && i > SomeDatas.Instance.lastIndexPerLevelInterval[LocalDatas.Instance.currentLevelIntervalIndexForCharacters]);
+            pricePanel.SetActive(Settings.User.characters[i] == '0');
+        }
+
+
+        if (Settings.User.characters[LocalDatas.Instance.currentCharacterIndex] == '0')
+        {
+            // changing character to index 0
+            PlayerPrefs.SetInt(Settings.characterIndex, 0);
+            LocalDatas.Instance.currentCharacterIndex = 0;
+        }
+
+        if (Settings.User.vfxs[LocalDatas.Instance.currentBallSkinIndex] == '0')
+        {
+            PlayerPrefs.SetInt(vfxIndex, 0);
+            LocalDatas.Instance.currentBallSkinIndex = 0;
+        }
+
+        if (Settings.User.arenas[LocalDatas.Instance.currentMapIndex] == '0')
+        {
+            PlayerPrefs.SetInt(Settings.mapIndex, 0);
+            LocalDatas.Instance.currentMapIndex = 0;
+        }
+
+        LocalDatas.Instance.ChangeAllPPs(PlayerPrefs.GetInt(profilePicIndex));
+        LocalDatas.Instance.SetSkillLevelsToArray();
+        MenuUIController.Instance.CheckIfInMenu();
+        if (LocalDatas.Instance.isInMainMenu)
+        {
+            LocalDatas.Instance.Sed3dObjectParent(true);
+            LocalDatas.Instance.SetCharacterObject(PlayerPrefs.GetInt(Settings.characterIndex));
+            MenuUIController.Instance.characterNameInPlayPanel.text = SomeDatas.Instance.characterNames[LocalDatas.Instance.currentCharacterIndex].ToString();
+        }
+        else
+        {
+            LocalDatas.Instance.SetCharacterObject(PlayerPrefs.GetInt(Settings.characterIndex));
+            MenuUIController.Instance.characterNameInPlayPanel.text = SomeDatas.Instance.characterNames[LocalDatas.Instance.currentCharacterIndex].ToString();
+        }
+        SetArenaDatasToUI();
+        MenuUIController.Instance.SetCoinsPrices();
+        LocalDatas.Instance.SetAllLocalDatasToUI();
+        //MenuCommonObjects.Instance.loadingPanel.SetActive(false);
+        StartCoroutine(LocalDatas.Instance.SetSkillButtonsPlayPanelCatcher());
+        StartCoroutine(LocalDatas.Instance.SetSkillButtonsPlayPanelRunner());
+        Debug.Log("Setting to UI finished");
+    }
+
+    private void SetArenaDatasToUI()
+    {
+        //for (int i = 0; i < arenaPriceTexts.Length; i++)
+        //{
+        //    arenaPriceTexts[i].text = SomeDatas.Instance.arenaPrices[i].ToString();
+        //    if (Settings.User.arenas[i] == '0')
+        //    {
+        //        arenaPriceTextPanels[i].SetActive(true);
+        //        selectTextsInArenaButtons[i].gameObject.SetActive(false);
+        //    }
+        //    else
+        //    {
+        //        arenaPriceTextPanels[i].SetActive(false);
+        //        selectTextsInArenaButtons[i].gameObject.SetActive(true);
+        //        if (LocalDatas.Instance.currentMapIndex == i)
+        //        {
+        //            selectTextsInArenaButtons[i].text = "Selected";
+        //        }
+        //        else
+        //        {
+        //            selectTextsInArenaButtons[i].text = "Select";
+        //        }
+
+        //    }
+        //}
+    }
 
 }

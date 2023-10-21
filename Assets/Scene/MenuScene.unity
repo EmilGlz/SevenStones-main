@@ -504,7 +504,7 @@ GameObject:
   - component: {fileID: 6403668}
   - component: {fileID: 6403667}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3420,7 +3420,7 @@ GameObject:
   - component: {fileID: 68196353}
   - component: {fileID: 68196352}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4239,7 +4239,7 @@ RectTransform:
   - {fileID: 1663537418}
   - {fileID: 683188461}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -5614,7 +5614,7 @@ GameObject:
   - component: {fileID: 89408965}
   - component: {fileID: 89408964}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6910,7 +6910,7 @@ RectTransform:
   - {fileID: 706038452}
   - {fileID: 1074385785}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7125,7 +7125,7 @@ GameObject:
   - component: {fileID: 122312472}
   - component: {fileID: 122312471}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7336,7 +7336,7 @@ GameObject:
   - component: {fileID: 125499818}
   - component: {fileID: 125499817}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8220,7 +8220,7 @@ RectTransform:
   - {fileID: 197529185}
   - {fileID: 1037498285}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -10481,7 +10481,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 202653631}
-  - component: {fileID: 202653630}
   - component: {fileID: 202653632}
   - component: {fileID: 202653635}
   - component: {fileID: 202653636}
@@ -10492,23 +10491,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &202653630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 202653627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 926b38b5c2b173d449cf0624abbdf59f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugtext: {fileID: 1444542422}
-  OnButtonSprite: {fileID: 21300000, guid: 4b38073cf630ecf4fbc5f379f9bfa0f6, type: 3}
-  OffButtonSprite: {fileID: 21300000, guid: 93e2a6ce8c87014438f1008e9b64628b, type: 3}
-  playGamesButton: {fileID: 243723073}
-  playGamesOnOffText: {fileID: 1995189873}
 --- !u!4 &202653631
 Transform:
   m_ObjectHideFlags: 0
@@ -10539,43 +10521,6 @@ MonoBehaviour:
   datas: 
   datasArray: []
   debugtext: {fileID: 1444542422}
-  pgs: {fileID: 202653630}
-  userID: VirtualIllusions
-  nickName: DefaultNick
-  level: 1
-  xp: 0
-  ssCoin: 500
-  crystalCoin: 5
-  generalWin: 0
-  generalLose: 0
-  generalMVPCount: 0
-  generalStone: 0
-  generalKill: 0
-  generalShot: 0
-  generalEndurance: 0
-  runnerSpeedLevel: 0
-  runnerShieldLevel: 1
-  runnerInvisibilityLevel: 0
-  runnerAddHealth: 0
-  runnerTrapLevel: 1
-  runnerSlowdownTrapLevel: 0
-  runnerTopViewLevel: 0
-  runnerWallLevel: 0
-  runnerHookLevel: 0
-  runnerBCLevel: 0
-  catcherSpeedLevel: 0
-  catcherShieldLevel: 1
-  catcherInvisibilityLevel: 0
-  catcherBallLevel: 0
-  catcherSlowdownTrapLevel: 0
-  catcherTopViewLevel: 0
-  catcherWallLevel: 0
-  catcherHookLevel: 0
-  catcherBCLevel: 0
-  catcherDeadlyHitLevel: 0
-  ballSkins: 010000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  characters: 0100000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  arenas: 010000000000000000000000
   runnerSkillsLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
   catcherSkillsLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
   currentRunnerSkill: 0
@@ -10645,36 +10590,6 @@ MonoBehaviour:
   - {fileID: 1048847076}
   - {fileID: 1287022730}
   - {fileID: 1178266225}
-  lockPanels:
-  - {fileID: 1425010145}
-  - {fileID: 2144364672}
-  - {fileID: 1130860175}
-  - {fileID: 962480403}
-  - {fileID: 482262835}
-  - {fileID: 541579852}
-  - {fileID: 1538725140}
-  - {fileID: 1973599585}
-  - {fileID: 1904439501}
-  - {fileID: 1042307038}
-  - {fileID: 945369249}
-  - {fileID: 893655599}
-  - {fileID: 2112823983}
-  - {fileID: 468714951}
-  characterPriceTextPanels:
-  - {fileID: 178757041}
-  - {fileID: 1560713429}
-  - {fileID: 1538630603}
-  - {fileID: 1833273703}
-  - {fileID: 945523023}
-  - {fileID: 322345888}
-  - {fileID: 660761920}
-  - {fileID: 1200252060}
-  - {fileID: 1189473423}
-  - {fileID: 597244386}
-  - {fileID: 1195859529}
-  - {fileID: 1753604456}
-  - {fileID: 1374846524}
-  - {fileID: 1576913568}
   lockPanelsInVFX:
   - {fileID: 713526021}
   - {fileID: 828991698}
@@ -13336,7 +13251,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 202653630}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayGamesServices, Assembly-CSharp
         m_MethodName: SignInOutPressed
         m_Mode: 1
@@ -14302,8 +14217,9 @@ RectTransform:
   - {fileID: 1126867072}
   - {fileID: 391545363}
   - {fileID: 273793909}
+  - {fileID: 1010740234}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -15593,7 +15509,7 @@ GameObject:
   - component: {fileID: 278819458}
   - component: {fileID: 278819457}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17931,7 +17847,7 @@ GameObject:
   - component: {fileID: 322345891}
   - component: {fileID: 322345890}
   m_Layer: 5
-  m_Name: CharacterPricePanel (5)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18040,7 +17956,7 @@ GameObject:
   - component: {fileID: 324381080}
   - component: {fileID: 324381079}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23822,7 +23738,7 @@ GameObject:
   - component: {fileID: 406326018}
   - component: {fileID: 406326017}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24834,7 +24750,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 202653630}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayGamesServices, Assembly-CSharp
         m_MethodName: OpenSaveToCloud
         m_Mode: 6
@@ -27109,7 +27025,7 @@ GameObject:
   - component: {fileID: 468714954}
   - component: {fileID: 468714953}
   m_Layer: 5
-  m_Name: LockPanel (12)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27564,7 +27480,7 @@ GameObject:
   - component: {fileID: 482262838}
   - component: {fileID: 482262837}
   m_Layer: 5
-  m_Name: LockPanel (4)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28177,7 +28093,7 @@ RectTransform:
   m_Children:
   - {fileID: 614082194}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 22
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -29966,7 +29882,7 @@ GameObject:
   - component: {fileID: 541579855}
   - component: {fileID: 541579854}
   m_Layer: 5
-  m_Name: LockPanel (5)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32672,7 +32588,7 @@ GameObject:
   - component: {fileID: 597244389}
   - component: {fileID: 597244388}
   m_Layer: 5
-  m_Name: CharacterPricePanel (3)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34536,45 +34452,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstTime: 1
-  user:
-    userId: VirtualIllusions
-    nickName: DefaultNick
-    level: 1
-    xp: 0
-    ssCoin: 500
-    starCoin: 5
-    gs:
-      generalWin: 0
-      generalLose: 0
-      generalMVP: 0
-      generalStone: 0
-      generalKill: 0
-      generalShot: 0
-      generalEndurance: 0
-    rs:
-      rSpeedLevel: 0
-      rShieldLevel: 1
-      rInvisibilityLevel: 0
-      rAddHealth: 0
-      rTrapLevel: 1
-      rSDTLevel: 0
-      rTopViewLevel: 0
-      rWallLevel: 0
-      rHookLevel: 0
-      rBCLevel: 0
-    cs:
-      cSpeedLevel: 0
-      cInvisibilityLevel: 0
-      cBallLevel: 0
-      cSDTlevel: 0
-      cTopViewLevel: 0
-      cWallLevel: 0
-      cHookLevel: 0
-      cBCLevel: 0
-      cDHLevel: 0
-    characters: 11000000000000
-    vfxs: 110000000000000
-    arenas: 100
 --- !u!4 &624694173
 Transform:
   m_ObjectHideFlags: 0
@@ -35748,7 +35625,7 @@ GameObject:
   - component: {fileID: 660761923}
   - component: {fileID: 660761922}
   m_Layer: 5
-  m_Name: CharacterPricePanel (6)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36094,7 +35971,7 @@ GameObject:
   - component: {fileID: 662294830}
   - component: {fileID: 662294829}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38151,7 +38028,6 @@ RectTransform:
   m_Children:
   - {fileID: 1791962693}
   - {fileID: 89215144}
-  - {fileID: 2064846726}
   - {fileID: 261058955}
   - {fileID: 1681374010}
   - {fileID: 118591997}
@@ -41126,7 +41002,7 @@ GameObject:
   - component: {fileID: 744439074}
   - component: {fileID: 744439073}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41282,7 +41158,7 @@ RectTransform:
   m_Children:
   - {fileID: 6641437}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -42014,7 +41890,7 @@ GameObject:
   - component: {fileID: 762292842}
   - component: {fileID: 762292841}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45911,7 +45787,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 202653630}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayGamesServices, Assembly-CSharp
         m_MethodName: SignOut
         m_Mode: 1
@@ -45923,7 +45799,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 202653630}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayGamesServices, Assembly-CSharp
         m_MethodName: Initialize
         m_Mode: 1
@@ -48709,7 +48585,7 @@ GameObject:
   - component: {fileID: 893655602}
   - component: {fileID: 893655601}
   m_Layer: 5
-  m_Name: LockPanel (11)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49021,7 +48897,7 @@ RectTransform:
   - {fileID: 1375704418}
   - {fileID: 1028707557}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -50850,7 +50726,7 @@ RectTransform:
   m_Children:
   - {fileID: 1979588447}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -51836,7 +51712,7 @@ GameObject:
   - component: {fileID: 945369252}
   - component: {fileID: 945369251}
   m_Layer: 5
-  m_Name: LockPanel (10)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51989,7 +51865,7 @@ GameObject:
   - component: {fileID: 945523026}
   - component: {fileID: 945523025}
   m_Layer: 5
-  m_Name: CharacterPricePanel (4)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53519,7 +53395,7 @@ GameObject:
   - component: {fileID: 962480406}
   - component: {fileID: 962480405}
   m_Layer: 5
-  m_Name: LockPanel (13)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53728,7 +53604,7 @@ RectTransform:
   m_Children:
   - {fileID: 433582180}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 23
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -55073,7 +54949,7 @@ RectTransform:
   m_Children:
   - {fileID: 1289995609}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -56279,6 +56155,97 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1010706737}
   m_CullTransparentMesh: 1
+--- !u!1 &1010740233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1010740234}
+  - component: {fileID: 1010740237}
+  - component: {fileID: 1010740236}
+  - component: {fileID: 1010740235}
+  m_Layer: 5
+  m_Name: ProfileBackground
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1010740234
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010740233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2064846726}
+  m_Father: {fileID: 261058955}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 4.100006, y: 6.5999985}
+  m_SizeDelta: {x: 69.87, y: -27.73}
+  m_Pivot: {x: 0, y: 0.5}
+--- !u!114 &1010740235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010740233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
+--- !u!114 &1010740236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010740233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 484cb9bb0305ac4478020fa54dbf5668, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1010740237
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010740233}
+  m_CullTransparentMesh: 1
 --- !u!1 &1010889099
 GameObject:
   m_ObjectHideFlags: 0
@@ -56388,7 +56355,7 @@ RectTransform:
   m_Children:
   - {fileID: 352724733}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -56772,7 +56739,7 @@ GameObject:
   - component: {fileID: 1025508930}
   - component: {fileID: 1025508929}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57583,7 +57550,7 @@ GameObject:
   - component: {fileID: 1042307041}
   - component: {fileID: 1042307040}
   m_Layer: 5
-  m_Name: LockPanel (3)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58241,7 +58208,7 @@ GameObject:
   - component: {fileID: 1048847077}
   - component: {fileID: 1048847076}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59508,7 +59475,7 @@ RectTransform:
   m_Children:
   - {fileID: 1063409354}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -61080,7 +61047,7 @@ RectTransform:
   - {fileID: 1088459082}
   - {fileID: 1802595386}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -61851,7 +61818,7 @@ GameObject:
   - component: {fileID: 1101667084}
   - component: {fileID: 1101667083}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64260,7 +64227,7 @@ GameObject:
   - component: {fileID: 1130860178}
   - component: {fileID: 1130860177}
   m_Layer: 5
-  m_Name: LockPanel (2)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65726,7 +65693,7 @@ GameObject:
   - component: {fileID: 1149133718}
   - component: {fileID: 1149133717}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66028,7 +65995,7 @@ GameObject:
   - component: {fileID: 1155099620}
   - component: {fileID: 1155099619}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67342,7 +67309,7 @@ GameObject:
   - component: {fileID: 1178266226}
   - component: {fileID: 1178266225}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68205,7 +68172,7 @@ GameObject:
   - component: {fileID: 1189473426}
   - component: {fileID: 1189473425}
   m_Layer: 5
-  m_Name: CharacterPricePanel (8)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68435,7 +68402,7 @@ GameObject:
   - component: {fileID: 1195859532}
   - component: {fileID: 1195859531}
   m_Layer: 5
-  m_Name: CharacterPricePanel (10)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68589,7 +68556,7 @@ GameObject:
   - component: {fileID: 1200252063}
   - component: {fileID: 1200252062}
   m_Layer: 5
-  m_Name: CharacterPricePanel (7)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69275,7 +69242,7 @@ GameObject:
   - component: {fileID: 1207074869}
   - component: {fileID: 1207074868}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72521,50 +72488,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1273706315}
   m_CullTransparentMesh: 1
---- !u!1 &1277151581
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1277151582}
-  - component: {fileID: 1277151583}
-  m_Layer: 0
-  m_Name: IAPManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1277151582
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277151581}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 422.206, y: 247.95163, z: -1203.2019}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1277151583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277151581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d663c762e4af0f45b9171d092ccb040, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1279762655
 GameObject:
   m_ObjectHideFlags: 0
@@ -72940,7 +72863,7 @@ GameObject:
   - component: {fileID: 1287022731}
   - component: {fileID: 1287022730}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74015,7 +73938,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 690547517}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -76132,7 +76055,7 @@ RectTransform:
   m_Children:
   - {fileID: 1108042961}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 21
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -77517,7 +77440,7 @@ GameObject:
   - component: {fileID: 1374846527}
   - component: {fileID: 1374846526}
   m_Layer: 5
-  m_Name: CharacterPricePanel (1)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79098,7 +79021,7 @@ GameObject:
   - component: {fileID: 1405002344}
   - component: {fileID: 1405002343}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81814,7 +81737,7 @@ GameObject:
   - component: {fileID: 1448883585}
   - component: {fileID: 1448883584}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82021,7 +81944,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 202653630}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayGamesServices, Assembly-CSharp
         m_MethodName: OpenSaveToCloud
         m_Mode: 6
@@ -82425,7 +82348,7 @@ GameObject:
   - component: {fileID: 1457597239}
   - component: {fileID: 1457597238}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82894,7 +82817,7 @@ GameObject:
   - component: {fileID: 1479636485}
   - component: {fileID: 1479636484}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84105,6 +84028,7 @@ MonoBehaviour:
       rBCLevel: 0
     cs:
       cSpeedLevel: 0
+      cShieldLevel: 0
       cInvisibilityLevel: 0
       cBallLevel: 0
       cSDTlevel: 0
@@ -84132,7 +84056,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1497082687
 GameObject:
@@ -85905,7 +85829,7 @@ GameObject:
   - component: {fileID: 1538630606}
   - component: {fileID: 1538630605}
   m_Layer: 5
-  m_Name: CharacterPricePanel (2)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85983,7 +85907,7 @@ GameObject:
   - component: {fileID: 1538725143}
   - component: {fileID: 1538725142}
   m_Layer: 5
-  m_Name: LockPanel (6)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86815,7 +86739,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 202653630}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayGamesServices, Assembly-CSharp
         m_MethodName: RefreshTest
         m_Mode: 1
@@ -86989,7 +86913,7 @@ GameObject:
   - component: {fileID: 1560713432}
   - component: {fileID: 1560713431}
   m_Layer: 5
-  m_Name: CharacterPricePanel (9)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88223,7 +88147,7 @@ GameObject:
   - component: {fileID: 1576913571}
   - component: {fileID: 1576913570}
   m_Layer: 5
-  m_Name: CharacterPricePanel (12)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88301,7 +88225,7 @@ GameObject:
   - component: {fileID: 1577514891}
   - component: {fileID: 1577514890}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90386,7 +90310,7 @@ GameObject:
   - component: {fileID: 1613067642}
   - component: {fileID: 1613067641}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90809,6 +90733,65 @@ Transform:
   m_Father: {fileID: 970976755}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1617729001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1617729002}
+  - component: {fileID: 1617729003}
+  m_Layer: 0
+  m_Name: CommonObjects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1617729002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617729001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1617729003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617729001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7391b04d9ffef241b3897665c959303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharactersButtons:
+  - {fileID: 808045100}
+  - {fileID: 287872538}
+  - {fileID: 979975002}
+  - {fileID: 1663586490}
+  - {fileID: 327362195}
+  - {fileID: 1798736833}
+  - {fileID: 1349226604}
+  - {fileID: 211704302}
+  - {fileID: 1263185161}
+  - {fileID: 385489780}
+  - {fileID: 1373460822}
+  - {fileID: 1896590160}
+  - {fileID: 1512939855}
+  - {fileID: 597596431}
 --- !u!1 &1618863428
 GameObject:
   m_ObjectHideFlags: 0
@@ -93618,7 +93601,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 690547517}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -94985,7 +94968,7 @@ RectTransform:
   m_Children:
   - {fileID: 915026197}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -96416,7 +96399,7 @@ GameObject:
   - component: {fileID: 1753604459}
   - component: {fileID: 1753604458}
   m_Layer: 5
-  m_Name: CharacterPricePanel (11)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97168,7 +97151,7 @@ RectTransform:
   - {fileID: 788419019}
   - {fileID: 1206632257}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -100336,7 +100319,7 @@ GameObject:
   - component: {fileID: 1833273706}
   - component: {fileID: 1833273705}
   m_Layer: 5
-  m_Name: CharacterPricePanel (13)
+  m_Name: CharacterPricePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102590,7 +102573,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 690547517}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -104232,7 +104215,7 @@ GameObject:
   - component: {fileID: 1904439504}
   - component: {fileID: 1904439503}
   m_Layer: 5
-  m_Name: LockPanel (8)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104746,7 +104729,7 @@ GameObject:
   - component: {fileID: 1913916429}
   - component: {fileID: 1913916428}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107126,7 +107109,7 @@ GameObject:
   - component: {fileID: 1972511932}
   - component: {fileID: 1972511931}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107261,7 +107244,7 @@ GameObject:
   - component: {fileID: 1973599588}
   - component: {fileID: 1973599587}
   m_Layer: 5
-  m_Name: LockPanel (7)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108845,7 +108828,7 @@ GameObject:
   - component: {fileID: 2002476672}
   - component: {fileID: 2002476671}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PriceText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109214,7 +109197,7 @@ RectTransform:
   - {fileID: 1350243365}
   - {fileID: 1766476247}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -109438,7 +109421,7 @@ RectTransform:
   m_Children:
   - {fileID: 137094015}
   m_Father: {fileID: 690547517}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -111994,6 +111977,7 @@ GameObject:
   - component: {fileID: 2064846726}
   - component: {fileID: 2064846728}
   - component: {fileID: 2064846727}
+  - component: {fileID: 2064846729}
   m_Layer: 5
   m_Name: PlayerProfileImage
   m_TagString: Untagged
@@ -112013,14 +111997,14 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 690547517}
-  m_RootOrder: 2
+  m_Father: {fileID: 1010740234}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 105, y: -67.01001}
-  m_SizeDelta: {x: 58.07, y: 74.32}
-  m_Pivot: {x: 0.50000006, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2064846727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112043,7 +112027,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 40afd35c48fe3f6478e83b7696884b5d, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -112059,6 +112043,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064846725}
   m_CullTransparentMesh: 1
+--- !u!114 &2064846729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064846725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 4
+  m_AspectRatio: 0.8
 --- !u!1 &2065244187
 GameObject:
   m_ObjectHideFlags: 0
@@ -114792,7 +114790,7 @@ GameObject:
   - component: {fileID: 2112823986}
   - component: {fileID: 2112823985}
   m_Layer: 5
-  m_Name: LockPanel (1)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -116001,7 +115999,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 202653630}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayGamesServices, Assembly-CSharp
         m_MethodName: RandomTest
         m_Mode: 1
@@ -116127,7 +116125,7 @@ GameObject:
   - component: {fileID: 2144364675}
   - component: {fileID: 2144364674}
   m_Layer: 5
-  m_Name: LockPanel (9)
+  m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

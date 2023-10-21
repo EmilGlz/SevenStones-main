@@ -6,7 +6,7 @@ using UnityEngine;
 public class CatcherSkills
 {
     public int cSpeedLevel;
-    //public int cShieldLevel;
+    public int cShieldLevel;
     public int cInvisibilityLevel;
     public int cBallLevel;
     public int cSDTlevel;

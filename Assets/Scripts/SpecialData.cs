@@ -25,5 +25,5 @@ public class SpecialData : MonoBehaviour
 
     [HideInInspector] public bool firstTime = true;
 
-    public User user;
+    //public User user;
 }
