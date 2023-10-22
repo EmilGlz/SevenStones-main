@@ -312,7 +312,7 @@ public class FirebaseController : MonoBehaviour
 
     }
 
-    IEnumerator ShowCongratsPanel()
+    public IEnumerator ShowCongratsPanel()
     {
         yield return null;
         Debug.Log("Startting congrats panel ... ");

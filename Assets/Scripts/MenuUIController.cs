@@ -137,6 +137,7 @@ public class MenuUIController : MonoBehaviour
     //[SerializeField] GameObject ruSurePanel;
 
     [SerializeField] GameObject ruSureShopPanel;
+    [SerializeField] GameObject iapNotReadyInShopPanel;
 
     [SerializeField] TMP_Text changeNickPriceText;
 
@@ -377,8 +378,6 @@ public class MenuUIController : MonoBehaviour
     const string mapIndexPlayerPrefs = "mi";
     const string currentSavedRunnerSkill = "rs";
     const string currentSavedCatcherSkill = "cs";
-    const string savedMusicVolume = "mv";
-    const string savedSoundVolume = "sv";
 
     int pressedBallBUttonIndex = -1;
     int pressedssCoinBUttonIndex = -1;
@@ -3348,25 +3347,14 @@ public class MenuUIController : MonoBehaviour
 
     public void MusicOnOff()
     {
-        if (LocalDatas.Instance.musicOn == 0) // if music is off, we turn on it
-        {
-            // TODO music on
-            LocalDatas.Instance.musicOn = 1;
-            PlayerPrefs.SetInt(savedMusicVolume, 1);
+        var previousMusicOn = Settings.MusicOn;
+        SetMusicOnOffButtonOptions(!previousMusicOn);
+        Settings.MusicOn = !previousMusicOn;
 
+        if (Settings.MusicOn)
             AudioManager.Instance.Play(0);
-            SetMusicOnOffButtonOptions(true);
-
-        }
-        else // if music is on, we turn off it
-        {
-            // TODO music off
-            LocalDatas.Instance.musicOn = 0;
-            PlayerPrefs.SetInt(savedMusicVolume, 0);
+        else 
             AudioManager.Instance.Stop(0);
-            SetMusicOnOffButtonOptions(false);
-
-        }
     }
     public void SetMusicOnOffButtonOptions(bool isOn)
     {
@@ -3399,19 +3387,9 @@ public class MenuUIController : MonoBehaviour
 
     public void SoundOnOff()
     {
-        if (LocalDatas.Instance.soundOn == 0) // if sound is off, we turn on it
-        {
-            SetSoundOnOffButtonOptions(true);
-            LocalDatas.Instance.soundOn = 1;
-            PlayerPrefs.SetInt(savedSoundVolume, 1);
-        }
-        else // if sound is on, we turn off it
-        {
-            SetSoundOnOffButtonOptions(false);
-            LocalDatas.Instance.soundOn = 0;
-            PlayerPrefs.SetInt(savedSoundVolume, 0);
-
-        }
+        var previousSoundOn = Settings.SounOn;
+        SetSoundOnOffButtonOptions(!previousSoundOn);
+        Settings.SounOn = !previousSoundOn;
     }
 
     public void OpenHelpSupport()
@@ -4020,7 +3998,9 @@ public class MenuUIController : MonoBehaviour
             var text = Utils.FindGameObject("NameText", CommonObjects.Instance.CharactersButtons[i]).GetComponent<TMP_Text>();
             var lockPanel = Utils.FindGameObject("LockPanel", CommonObjects.Instance.CharactersButtons[i]);
             var pricePanel = Utils.FindGameObject("CharacterPricePanel", CommonObjects.Instance.CharactersButtons[i]);
+            var priceText = Utils.FindGameObject("PriceText", CommonObjects.Instance.CharactersButtons[i]).GetComponent<TMP_Text>();
             text.text = SomeDatas.Instance.characterNames[i];
+            priceText.text = SomeDatas.Instance.characterPrices[i].ToString();
             lockPanel.SetActive(Settings.User.characters[i] == '0' && i > SomeDatas.Instance.lastIndexPerLevelInterval[LocalDatas.Instance.currentLevelIntervalIndexForCharacters]);
             pricePanel.SetActive(Settings.User.characters[i] == '0');
         }
@@ -4047,20 +4027,20 @@ public class MenuUIController : MonoBehaviour
 
         LocalDatas.Instance.ChangeAllPPs(PlayerPrefs.GetInt(profilePicIndex));
         LocalDatas.Instance.SetSkillLevelsToArray();
-        MenuUIController.Instance.CheckIfInMenu();
+        Instance.CheckIfInMenu();
         if (LocalDatas.Instance.isInMainMenu)
         {
             LocalDatas.Instance.Sed3dObjectParent(true);
             LocalDatas.Instance.SetCharacterObject(PlayerPrefs.GetInt(Settings.characterIndex));
-            MenuUIController.Instance.characterNameInPlayPanel.text = SomeDatas.Instance.characterNames[LocalDatas.Instance.currentCharacterIndex].ToString();
+            Instance.characterNameInPlayPanel.text = SomeDatas.Instance.characterNames[LocalDatas.Instance.currentCharacterIndex].ToString();
         }
         else
         {
             LocalDatas.Instance.SetCharacterObject(PlayerPrefs.GetInt(Settings.characterIndex));
-            MenuUIController.Instance.characterNameInPlayPanel.text = SomeDatas.Instance.characterNames[LocalDatas.Instance.currentCharacterIndex].ToString();
+            Instance.characterNameInPlayPanel.text = SomeDatas.Instance.characterNames[LocalDatas.Instance.currentCharacterIndex].ToString();
         }
         SetArenaDatasToUI();
-        MenuUIController.Instance.SetCoinsPrices();
+        Instance.SetCoinsPrices();
         LocalDatas.Instance.SetAllLocalDatasToUI();
         //MenuCommonObjects.Instance.loadingPanel.SetActive(false);
         StartCoroutine(LocalDatas.Instance.SetSkillButtonsPlayPanelCatcher());
@@ -4070,29 +4050,6 @@ public class MenuUIController : MonoBehaviour
 
     private void SetArenaDatasToUI()
     {
-        //for (int i = 0; i < arenaPriceTexts.Length; i++)
-        //{
-        //    arenaPriceTexts[i].text = SomeDatas.Instance.arenaPrices[i].ToString();
-        //    if (Settings.User.arenas[i] == '0')
-        //    {
-        //        arenaPriceTextPanels[i].SetActive(true);
-        //        selectTextsInArenaButtons[i].gameObject.SetActive(false);
-        //    }
-        //    else
-        //    {
-        //        arenaPriceTextPanels[i].SetActive(false);
-        //        selectTextsInArenaButtons[i].gameObject.SetActive(true);
-        //        if (LocalDatas.Instance.currentMapIndex == i)
-        //        {
-        //            selectTextsInArenaButtons[i].text = "Selected";
-        //        }
-        //        else
-        //        {
-        //            selectTextsInArenaButtons[i].text = "Select";
-        //        }
-
-        //    }
-        //}
+        ArenaButtonPressed(LocalDatas.Instance.currentMapIndex);
     }
-
 }

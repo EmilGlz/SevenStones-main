@@ -25,17 +25,11 @@ public class LocalDatas : MonoBehaviour
     public int currentBallSkinIndex = 0;
     public byte currentMapIndex = 0;
 
-    public int soundOn;
-    public int musicOn;
-
     [SerializeField] GameObject[] profilePics;
     [SerializeField] Sprite[] profilePicSprites;
 
     const string currentSavedRunnerSkill = "rs";
     const string currentSavedCatcherSkill = "cs";
-    const string savedMusicVolume = "mv";
-    const string savedSoundVolume = "sv";
-
 
 
     public int currentLevelIntervalIndex = 0;
@@ -151,6 +145,11 @@ public class LocalDatas : MonoBehaviour
         {
             Settings.User = Settings.ResettedUser();
             SaveLoadManager.Save(Settings.User);
+        }
+        if (Settings.User.xp >= SomeDatas.Instance.xpPerLevel[Settings.User.level - 1])
+        {
+            StartCoroutine(FirebaseController.Instance.ShowCongratsPanel());
+            AudioManager.Instance.Play(0);
         }
         MenuUIController.Instance.SetToUI();
     }
@@ -554,27 +553,18 @@ public class LocalDatas : MonoBehaviour
         for (int i = 0; i < xpTexts.Length; i++)
         {
             if (Settings.User.level >= 1)
-            {
                 xpTexts[i].text = "XP: " + Settings.User.xp.ToString("n0") + "/" + SomeDatas.Instance.xpPerLevel[Settings.User.level - 1].ToString("n0");
-            }
         }
-
 
         SetXPSlider();
         SetUICoins();
         SetGeneralStatsToUI();
 
-
         SetVFXDatasToUI();
 
-
-
         MenuUIController.Instance.SetArenaButton();
-
-
-
-        MenuUIController.Instance.SetMusicOnOffButtonOptions(Convert.ToBoolean(PlayerPrefs.GetInt(savedMusicVolume)));
-        MenuUIController.Instance.SetSoundOnOffButtonOptions(Convert.ToBoolean(PlayerPrefs.GetInt(savedSoundVolume)));
+        MenuUIController.Instance.SetMusicOnOffButtonOptions(Settings.MusicOn);
+        MenuUIController.Instance.SetSoundOnOffButtonOptions(Settings.SounOn);
 
     }
 

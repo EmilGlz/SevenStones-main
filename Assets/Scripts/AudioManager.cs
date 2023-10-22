@@ -40,26 +40,19 @@ public class AudioManager : MonoBehaviour
 
     public void Play( int soundIndex )
     {
-        //Sound s = Array.Find(sounds, sound => sound.name == name); // find in sounds array a sound whose name is name
         Sound s = sounds[soundIndex];
         if (s == null)
-        {
             return;
-        }
         // If it is music
         if (soundIndex == 0 || soundIndex == 8)
         {
-            if (PlayerPrefs.GetInt(savedMusicVolume) == 1)
-            {
+            if (Settings.MusicOn)
                 s.source.Play();
-            }
         }
         else // if it is sfx
         {
-            if (PlayerPrefs.GetInt(savedSoundVolume) == 1)
-            {
+            if (Settings.SounOn)
                 s.source.Play();
-            }
         }
     }
 
@@ -68,9 +61,7 @@ public class AudioManager : MonoBehaviour
         //Sound s = Array.Find(sounds, sound => sound.name == name); // find in sounds array a sound whose name is name
         Sound s = sounds[soundIndex];
         if (s == null)
-        {
             return;
-        }
         s.source.Stop();
     }
 

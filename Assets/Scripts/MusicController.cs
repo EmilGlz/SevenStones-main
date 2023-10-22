@@ -7,26 +7,20 @@ public class MusicController : MonoBehaviour
 
     public void ButtonClick()
     {
-        if (LocalDatas.Instance.soundOn == 1)
-        {
+        if (Settings.SounOn)
             AudioManager.Instance.Play(5); 
-        }
     }
 
     public void ButtonClickExit()
     {
-        if (LocalDatas.Instance.soundOn == 1)
-        {
+        if (Settings.SounOn)
             AudioManager.Instance.Play(6);
-        }
     }
 
     public void PlayButtonClick()
     {
-        if (LocalDatas.Instance.soundOn == 1)
-        {
+        if (Settings.SounOn)
             AudioManager.Instance.Play(7);
-        }
     }
 
 

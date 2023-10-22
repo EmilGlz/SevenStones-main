@@ -1,9 +1,9 @@
 {
-    "m_SelectedDeviceId": "RF8N81A5V8R",
+    "m_SelectedDeviceId": "10.0.0.148:43289",
     "m_SelectedPackage": {
-        "deviceId": "",
-        "name": "",
-        "processId": 0,
+        "deviceId": "10.0.0.148:43289",
+        "name": "com.EmilGlz.StoneHunters",
+        "processId": 31745,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -12,6 +12,12 @@
             "deviceId": "RF8N81A5V8R",
             "name": "com.sec.android.app.launcher",
             "processId": 1825,
+            "exited": false
+        },
+        {
+            "deviceId": "10.0.0.148:43289",
+            "name": "com.EmilGlz.StoneHunters",
+            "processId": 31745,
             "exited": false
         }
     ],

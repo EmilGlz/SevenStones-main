@@ -8,6 +8,20 @@ public static class Settings
         get => user;
         set => user = value;
     }
+    public static bool SounOn
+    {
+        get => PlayerPrefs.GetInt("KEY_SOUNDON") == 1;
+        set => PlayerPrefs.SetInt("KEY_SOUNDON", value ? 1 : 0);
+    }
+
+    public static bool MusicOn
+    {
+        get => PlayerPrefs.GetInt("KEY_MUSICON") == 1;
+        set => PlayerPrefs.SetInt("KEY_MUSICON", value ? 1 : 0);
+    }
+
+
+
 
     public static User ResettedUser()
     {
