@@ -342,7 +342,8 @@ public class FirebaseController : MonoBehaviour
                 SetNotificationIconsInMenu(0);
                 SetOrangeIconsInCharactersPanel( WhatIsCharacterPrize() );
                 prizeCharacterIndex = WhatIsCharacterPrize();
-                Utils.SetCharAtIndex(Settings.User.characters, prizeCharacterIndex, '1');
+                Utils.SetCharAtIndex(ref Settings.User.characters, prizeCharacterIndex, '1');
+                MenuUIController.Instance.SetToUI();
             }
             else if (CheckWhatIsPrize() == 1) // VFX prize
             {
@@ -350,7 +351,8 @@ public class FirebaseController : MonoBehaviour
                 SetNotificationIconsInMenu(1);
                 SetOrangeIconsInVFXPanel(WhatIsVFXPrize());
                 prizeVFXIndex = WhatIsVFXPrize();
-                Utils.SetCharAtIndex(Settings.User.vfxs, prizeVFXIndex, '1');
+                Utils.SetCharAtIndex(ref Settings.User.vfxs, prizeVFXIndex, '1');
+                MenuUIController.Instance.SetToUI();
             }
             prize3Object.gameObject.SetActive(true);
         }
@@ -366,7 +368,7 @@ public class FirebaseController : MonoBehaviour
         LocalDatas.Instance.currentLevelIntervalIndex = LocalDatas.Instance.SetLevelIntervalIndex();
         LocalDatas.Instance.SetLevelIntervalIndexForCharacter();
 
-
+        MenuUIController.Instance.SetToUI();
         SaveLoadManager.Save(Settings.User);
 
         LocalDatas.Instance.OpenPanel1();

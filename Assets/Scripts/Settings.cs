@@ -30,7 +30,7 @@ public static class Settings
             userId = "",
             nickName = "Player" + Random.Range(0, 100),
             xp = 0,
-            starCoin = 0,
+            starCoin = 25,
             level = 1,
             ssCoin = 500,
             gs = new GeneralStats

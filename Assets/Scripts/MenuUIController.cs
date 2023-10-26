@@ -3098,6 +3098,7 @@ public class MenuUIController : MonoBehaviour
         changeNickInputfield.text = "";
         LocalDatas.Instance.SetNickNameTexts();
         SaveLoadManager.Save(Settings.User);
+        SetToUI();
         CloseChangeNickPanel();
     }
 
@@ -3240,11 +3241,12 @@ public class MenuUIController : MonoBehaviour
 
                     LocalDatas.Instance.SetCharacterBuyButton(1);
                     Settings.User.ssCoin -= SomeDatas.Instance.characterPrices[openedCharacterIndex];
-                    Utils.SetCharAtIndex(Settings.User.characters, openedCharacterIndex, '1');
-                    lockPanels[openedCharacterIndex].GetComponent<Image>().color = Color.black;
-                    LocalDatas.Instance.SetUICoins();
-                    characterInsidePricePanel.SetActive(false);
+                    Utils.SetCharAtIndex(ref Settings.User.characters, openedCharacterIndex, '1');
+                    //lockPanels[openedCharacterIndex].GetComponent<Image>().color = Color.black;
+                    //LocalDatas.Instance.SetUICoins();
+                    //characterInsidePricePanel.SetActive(false);
                     SaveLoadManager.Save(Settings.User);
+                    SetToUI();
                     AudioManager.Instance.Play(2);
                 }
                 else // if we dont have enough money 
@@ -3479,9 +3481,10 @@ public class MenuUIController : MonoBehaviour
             // Buying
             AudioManager.Instance.Play(1);
             Settings.User.starCoin -= SomeDatas.Instance.arenaPrices[pressedArenaIndex];
-            Utils.SetCharAtIndex(Settings.User.arenas, pressedArenaIndex, '1');
+            Utils.SetCharAtIndex(ref Settings.User.arenas, pressedArenaIndex, '1');
             SaveLoadManager.Save(Settings.User);
             ruSureArenaPanel.SetActive(false);
+            SetToUI();
         }
         else
         {
@@ -3749,10 +3752,9 @@ public class MenuUIController : MonoBehaviour
                 SetVFXSelectOrBuyButton(1); // set button from buy, to select
                 rightVFXText.gameObject.SetActive(false);
                 Settings.User.ssCoin -= SomeDatas.Instance.ballPrices[pressedBallBUttonIndex];
-                Utils.SetCharAtIndex(Settings.User.vfxs, pressedBallBUttonIndex, '1');
-                LocalDatas.Instance.SetUICoins();
-                LocalDatas.Instance.vfxPriceTextPanels[pressedBallBUttonIndex].SetActive(false);
+                Utils.SetCharAtIndex(ref Settings.User.vfxs, pressedBallBUttonIndex, '1');
                 SaveLoadManager.Save(Settings.User);
+                SetToUI();
             }
             else
             {

@@ -2,17 +2,13 @@ using UnityEngine;
 
 public static class Utils 
 {
-    public static string SetCharAtIndex(string inputString, int index, char newChar)
+    public static void SetCharAtIndex(ref string inputString, int index, char newChar)
     {
         if (index >= 0 && index < inputString.Length)
         {
             char[] charArray = inputString.ToCharArray();
             charArray[index] = newChar;
-            return new string(charArray);
-        }
-        else
-        {
-            return inputString;
+            inputString = new string(charArray);
         }
     }
 

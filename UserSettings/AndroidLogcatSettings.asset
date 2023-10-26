@@ -1,9 +1,9 @@
 {
-    "m_SelectedDeviceId": "10.0.0.148:43289",
+    "m_SelectedDeviceId": "10.0.0.148:35951",
     "m_SelectedPackage": {
-        "deviceId": "10.0.0.148:43289",
+        "deviceId": "10.0.0.148:35951",
         "name": "com.EmilGlz.StoneHunters",
-        "processId": 31745,
+        "processId": 19449,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -18,6 +18,12 @@
             "deviceId": "10.0.0.148:43289",
             "name": "com.EmilGlz.StoneHunters",
             "processId": 31745,
+            "exited": false
+        },
+        {
+            "deviceId": "10.0.0.148:35951",
+            "name": "com.EmilGlz.StoneHunters",
+            "processId": 19449,
             "exited": false
         }
     ],
