@@ -33,7 +33,7 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -51,6 +51,7 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
         PhotonNetwork.GameVersion = "0.0.1";
         try
         {
+            MenuCommonObjects.Instance.connectingToInternetPanelInStart.SetActive(true);
             PhotonNetwork.ConnectUsingSettings();
         }
         catch (System.Exception)
@@ -62,6 +63,8 @@ public class PhotonNetworkingMain : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected Photon Network Master. Connecting to Photon Network Lobby.");
+        if (MenuCommonObjects.Instance.connectingToInternetPanelInStart != null)
+            MenuCommonObjects.Instance.connectingToInternetPanelInStart.SetActive(false);
         PhotonNetwork.JoinLobby(new TypedLobby("0", LobbyType.Default));
     }
 

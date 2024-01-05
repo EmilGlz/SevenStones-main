@@ -186,7 +186,6 @@ public class LocalDatas : MonoBehaviour
                 if (s == 1)
                 {
                     firstSkillIndex = i;
-                    Debug.Log("First Runner Skill Index: " + firstSkillIndex);
                 }
             }
             yield return null;
@@ -311,7 +310,6 @@ public class LocalDatas : MonoBehaviour
     }
     public void ChangeAllPPs(int ppIndex)
     {
-        Debug.Log("PP Index: " + ppIndex);
         // Prozapas
         if (ppIndex >= profilePicSprites.Length)
         {

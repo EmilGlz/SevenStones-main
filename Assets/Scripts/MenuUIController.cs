@@ -3990,7 +3990,6 @@ public class MenuUIController : MonoBehaviour
 
     public void SetToUI()
     {
-        Debug.Log("Starting Setting To UI");
         LocalDatas.Instance.currentCharacterIndex = PlayerPrefs.GetInt(Settings.characterIndex);
         LocalDatas.Instance.currentBallSkinIndex = PlayerPrefs.GetInt(vfxIndex);
         LocalDatas.Instance.currentMapIndex = (byte)PlayerPrefs.GetInt(Settings.mapIndex);
@@ -4047,7 +4046,6 @@ public class MenuUIController : MonoBehaviour
         //MenuCommonObjects.Instance.loadingPanel.SetActive(false);
         StartCoroutine(LocalDatas.Instance.SetSkillButtonsPlayPanelCatcher());
         StartCoroutine(LocalDatas.Instance.SetSkillButtonsPlayPanelRunner());
-        Debug.Log("Setting to UI finished");
     }
 
     private void SetArenaDatasToUI()

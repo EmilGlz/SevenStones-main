@@ -20,4 +20,5 @@ public class MenuCommonObjects : MonoBehaviour
     public GameObject loadingPanel;
     public Slider loadingSlider;
     public GameObject loadingSliderImage;
+    public GameObject connectingToInternetPanelInStart;
 }
